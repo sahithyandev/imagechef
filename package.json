@@ -1,5 +1,7 @@
 {
   "name": "image-chef",
+  "author": "Sahithyan K.",
+  "license": "MIT",
   "module": "index.ts",
   "type": "module",
   "private": true,
