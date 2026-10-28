@@ -7,6 +7,7 @@
 @layer base {
   * {
     border-color: currentcolor;
+    box-sizing: border-box;
   }
 
   html {
@@ -15,7 +16,7 @@
   }
 
   body {
-    @apply m-0 min-w-80 bg-white text-neutral-950 antialiased dark:bg-neutral-950 dark:text-neutral-50;
+    @apply m-0 min-w-80 bg-[#141614] text-[#eef1ea] antialiased;
   }
 
   button,
@@ -24,10 +25,516 @@
   select {
     font: inherit;
   }
+
+  button:not(:disabled),
+  label {
+    cursor: pointer;
+  }
+
+  button:focus-visible,
+  input:focus-visible,
+  label:has(input:focus-visible) {
+    outline: 2px solid #c4ff5b;
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: #c4ff5b;
+    color: #141614;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #4b5049;
+    border: 3px solid #1d201d;
+    border-radius: 10px;
+  }
 }
 
 @layer components {
   .app-shell {
     @apply min-h-dvh;
+  }
+
+  .welcome-shell {
+    background: radial-gradient(circle at 82% 12%, #343b2a 0, transparent 31rem), #141614;
+  }
+  .topbar {
+    align-items: center;
+    border-bottom: 1px solid #41473f;
+    display: flex;
+    justify-content: space-between;
+    min-height: 64px;
+    padding: 0 28px;
+  }
+  .welcome-topbar {
+    border-bottom-color: transparent;
+  }
+  .brand {
+    color: #eef1ea;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    text-decoration: none;
+  }
+  .brand span {
+    color: #c4ff5b;
+    font-weight: 500;
+  }
+  .status-note {
+    align-items: center;
+    color: #abb1a8;
+    display: flex;
+    font-size: 0.78rem;
+    gap: 8px;
+  }
+  .status-dot {
+    background: #c4ff5b;
+    border-radius: 100%;
+    height: 7px;
+    width: 7px;
+  }
+  .welcome-content {
+    display: grid;
+    gap: 52px;
+    margin: 0 auto;
+    max-width: 1060px;
+    min-height: calc(100dvh - 64px);
+    padding: clamp(60px, 12vh, 140px) 28px 60px;
+    place-content: center;
+  }
+  .welcome-copy {
+    max-width: 700px;
+  }
+  .overline {
+    color: #c4ff5b;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin: 0 0 18px;
+  }
+  .welcome-copy h1 {
+    font-size: clamp(2.8rem, 7vw, 5.7rem);
+    letter-spacing: -0.065em;
+    line-height: 0.91;
+    margin: 0;
+    max-width: 8ch;
+    text-wrap: balance;
+  }
+  .welcome-copy p:not(.overline) {
+    color: #bfc5ba;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 28px 0 0;
+    max-width: 58ch;
+  }
+  .dropzone {
+    align-items: center;
+    background: #1d201d;
+    border: 1px dashed #778071;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    min-height: 270px;
+    padding: 34px;
+    text-align: center;
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease;
+  }
+  .dropzone:hover {
+    background: #242823;
+    border-color: #c4ff5b;
+  }
+  .dropzone-icon {
+    align-items: center;
+    background: #c4ff5b;
+    color: #141614;
+    display: grid;
+    height: 48px;
+    justify-content: center;
+    width: 48px;
+  }
+  .dropzone > strong {
+    font-size: 1.1rem;
+  }
+  .dropzone > span:not(.button):not(.dropzone-icon) {
+    color: #abb1a8;
+    font-size: 0.85rem;
+  }
+  .button {
+    align-items: center;
+    border: 1px solid transparent;
+    display: inline-flex;
+    font-size: 0.84rem;
+    font-weight: 650;
+    justify-content: center;
+    min-height: 37px;
+    padding: 0 14px;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+  }
+  .button-primary {
+    background: #c4ff5b;
+    color: #141614;
+    margin-top: 6px;
+  }
+  .button-secondary {
+    background: transparent;
+    border-color: #697167;
+    color: #eef1ea;
+  }
+  .button-secondary:hover:not(:disabled) {
+    border-color: #c4ff5b;
+    color: #c4ff5b;
+  }
+  .button:disabled {
+    cursor: not-allowed;
+    opacity: 0.43;
+  }
+  .inline-error {
+    background: #44291f;
+    color: #ffb7a0;
+    margin: -30px 0 0;
+    padding: 12px 14px;
+  }
+  .topbar-actions {
+    align-items: center;
+    display: flex;
+    gap: 20px;
+  }
+  .workspace {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.8fr) minmax(350px, 1.15fr) minmax(260px, 0.9fr);
+    min-height: calc(100dvh - 64px);
+  }
+  .workspace-panel {
+    border-right: 1px solid #41473f;
+    min-width: 0;
+    padding: 24px;
+  }
+  .workspace-panel:last-child {
+    border-right: 0;
+  }
+  .panel-heading {
+    align-items: center;
+    color: #eef1ea;
+    display: flex;
+    font-size: 0.86rem;
+    gap: 9px;
+    letter-spacing: -0.01em;
+    margin: 0 0 22px;
+  }
+  .panel-heading svg {
+    color: #c4ff5b;
+  }
+  .image-stage,
+  .output-preview {
+    background: #0c0d0c;
+    display: grid;
+    min-height: 240px;
+    overflow: hidden;
+    place-items: center;
+  }
+  .image-stage img,
+  .output-preview img {
+    height: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    width: 100%;
+  }
+  .file-details {
+    border-bottom: 1px solid #41473f;
+    display: grid;
+    gap: 4px;
+    padding: 16px 0;
+  }
+  .file-details strong {
+    font-size: 0.87rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .file-details span,
+  .output-copy p,
+  .recipe-step p {
+    color: #abb1a8;
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+  .secondary-dropzone {
+    color: #c4ff5b;
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 650;
+    margin-top: 18px;
+  }
+  .search-field {
+    align-items: center;
+    border-bottom: 1px solid #697167;
+    color: #abb1a8;
+    display: flex;
+    gap: 9px;
+    padding: 0 0 9px;
+  }
+  .search-field input {
+    background: transparent;
+    border: 0;
+    color: #eef1ea;
+    min-width: 0;
+    outline: 0;
+    width: 100%;
+  }
+  .search-field input::placeholder {
+    color: #899087;
+  }
+  .operation-catalogue {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: 18px;
+  }
+  .operation-option {
+    align-items: center;
+    background: #222521;
+    border: 0;
+    color: #eef1ea;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    min-height: 68px;
+    padding: 11px;
+    text-align: left;
+  }
+  .operation-option:hover {
+    background: #2b302a;
+  }
+  .operation-option strong,
+  .operation-option small {
+    display: block;
+  }
+  .operation-option strong {
+    font-size: 0.8rem;
+  }
+  .operation-option small {
+    color: #abb1a8;
+    font-size: 0.66rem;
+    margin-top: 3px;
+  }
+  .operation-option svg {
+    color: #c4ff5b;
+    flex: 0 0 auto;
+  }
+  .recipe-list {
+    margin-top: 28px;
+  }
+  .section-label {
+    color: #abb1a8;
+    display: flex;
+    font-size: 0.7rem;
+    font-weight: 700;
+    justify-content: space-between;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .empty-recipe {
+    color: #abb1a8;
+    font-size: 0.83rem;
+    line-height: 1.5;
+    margin: 14px 0 0;
+  }
+  .recipe-step {
+    border-bottom: 1px solid #41473f;
+    padding: 15px 0;
+  }
+  .recipe-step.is-disabled {
+    opacity: 0.5;
+  }
+  .step-topline {
+    align-items: center;
+    display: flex;
+    gap: 9px;
+  }
+  .step-topline strong {
+    font-size: 0.84rem;
+  }
+  .toggle-button {
+    background: #c4ff5b;
+    border: 0;
+    color: #141614;
+    font-size: 0.62rem;
+    font-weight: 800;
+    min-width: 26px;
+    padding: 3px 4px;
+  }
+  .is-disabled .toggle-button {
+    background: #697167;
+    color: #eef1ea;
+  }
+  .step-actions {
+    display: flex;
+    gap: 2px;
+    margin-left: auto;
+  }
+  .step-actions button {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: #abb1a8;
+    display: inline-flex;
+    padding: 4px;
+  }
+  .step-actions button:hover:not(:disabled) {
+    color: #c4ff5b;
+  }
+  .step-actions button:disabled {
+    opacity: 0.25;
+  }
+  .recipe-step p {
+    margin: 8px 0 12px 35px;
+  }
+  .parameter-grid {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-left: 35px;
+  }
+  .parameter-grid label {
+    color: #abb1a8;
+    display: grid;
+    font-size: 0.66rem;
+    gap: 4px;
+    text-transform: capitalize;
+  }
+  .parameter-grid input:not([type="checkbox"]) {
+    background: #222521;
+    border: 1px solid #4b5049;
+    color: #eef1ea;
+    font-size: 0.76rem;
+    min-width: 0;
+    padding: 6px;
+  }
+  .parameter-grid input[type="checkbox"] {
+    accent-color: #c4ff5b;
+    height: 16px;
+    margin: 2px 0;
+    width: 16px;
+  }
+  .output-panel {
+    display: flex;
+    flex-direction: column;
+  }
+  .output-preview {
+    min-height: 0;
+    position: relative;
+  }
+  .output-preview img {
+    filter: grayscale(0.25);
+    opacity: 0.5;
+  }
+  .preview-scrim {
+    align-items: center;
+    background: #141614b8;
+    color: #eef1ea;
+    display: flex;
+    font-size: 0.75rem;
+    font-weight: 650;
+    inset: 0;
+    justify-content: center;
+    position: absolute;
+  }
+  .preview-scrim span {
+    border: 1px solid #697167;
+    padding: 8px 10px;
+  }
+  .output-copy {
+    margin-top: 20px;
+  }
+  .output-copy strong {
+    font-size: 0.9rem;
+  }
+  .output-copy p {
+    margin: 7px 0 0;
+  }
+  .button-wide {
+    margin-top: auto;
+    width: 100%;
+  }
+  .mobile-tabs {
+    display: none;
+  }
+
+  @media (max-width: 850px) {
+    .topbar {
+      padding: 0 18px;
+    }
+    .mobile-tabs {
+      border-bottom: 1px solid #41473f;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .mobile-tabs button {
+      background: transparent;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      color: #abb1a8;
+      padding: 14px 10px 11px;
+      text-transform: capitalize;
+    }
+    .mobile-tabs button.active {
+      border-bottom-color: #c4ff5b;
+      color: #eef1ea;
+    }
+    .workspace {
+      display: block;
+      min-height: calc(100dvh - 109px);
+    }
+    .workspace-panel {
+      border: 0;
+      display: none;
+      padding: 20px 18px;
+    }
+    .workspace.active-input .input-panel,
+    .workspace.active-recipe .recipe-panel,
+    .workspace.active-output .output-panel {
+      display: flex;
+    }
+    .workspace.active-recipe .recipe-panel {
+      display: block;
+    }
+    .image-stage {
+      min-height: min(62vh, 480px);
+    }
+    .output-preview {
+      min-height: min(52vh, 400px);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .status-note {
+      display: none;
+    }
+    .welcome-content {
+      gap: 38px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .topbar {
+      padding: 0 16px;
+    }
+    .topbar-actions {
+      gap: 8px;
+    }
+    .operation-catalogue {
+      grid-template-columns: 1fr;
+    }
+    .parameter-grid {
+      grid-template-columns: 1fr;
+    }
   }
 }
