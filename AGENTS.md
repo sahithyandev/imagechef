@@ -40,6 +40,8 @@ Use `bun check` to type check the project. It reads `tsconfig.json` and reports 
 
 ## Frontend
 
+For this repository, use Vite as the frontend bundler. Bun remains the runtime, package manager, and test runner. This project-specific choice overrides the general Bun HTML-import guidance below.
+
 Use HTML imports with `Bun.serve()`. Don't use `vite`. HTML imports fully support React, CSS, Tailwind.
 
 Server:
@@ -111,3 +113,10 @@ bun --hot ./index.ts
 ```
 
 For more information, read the Bun API docs in `node_modules/bun-types/docs/**.mdx`.
+
+## Git commits
+
+- Make small, focused commits as work progresses.
+- Use lowercase, descriptive commit messages.
+- Do not use Conventional Commit prefixes.
+- Keep `ARCHITECTURE.md` uncommitted until explicitly requested otherwise.
