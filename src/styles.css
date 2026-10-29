@@ -145,47 +145,6 @@
     @apply grid max-w-[660px] grid-cols-3 gap-3;
   }
 
-  .sample-image-card {
-    @apply overflow-hidden border border-line bg-surface;
-  }
-
-  .sample-image-select {
-    @apply grid w-full text-left transition-[border-color,background] duration-150 ease-in-out;
-  }
-
-  .sample-image-select:hover {
-    @apply bg-surface-hover;
-  }
-
-  .sample-image-card:has(.sample-image-select:hover),
-  .sample-image-card:has(.sample-image-select:focus-visible) {
-    @apply border-accent;
-  }
-
-  .sample-image-select > img {
-    @apply aspect-[3/2] w-full object-cover;
-  }
-
-  .sample-image-select > span {
-    @apply grid gap-0.5 p-3;
-  }
-
-  .sample-image-select small {
-    @apply text-[0.5rem] font-bold uppercase tracking-[0.1em] text-accent;
-  }
-
-  .sample-image-select strong {
-    @apply text-[0.84rem] text-ink;
-  }
-
-  .sample-image-card > a {
-    @apply block overflow-hidden text-ellipsis whitespace-nowrap border-t border-line px-3 py-2 text-[0.68rem] text-muted underline underline-offset-2;
-  }
-
-  .sample-image-card > a:hover {
-    @apply text-accent;
-  }
-
   .button {
     @apply inline-flex min-h-[37px] items-center justify-center border border-transparent px-3.5 text-[0.84rem] font-[650] transition-[background,color] duration-150 ease-in-out;
   }

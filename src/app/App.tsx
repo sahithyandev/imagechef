@@ -13,6 +13,7 @@ import { type ReactNode, useEffect, useMemo, useState } from "react";
 import modernAbstractImage from "@/assets/photo-abstract-painting.jpg";
 import alpineLakeImage from "@/assets/photo-alpine-lake.jpg";
 import rainLeavesImage from "@/assets/photo-rain-leaves.jpg";
+import { SampleImageDisplay } from "@/components/SampleImageDisplay";
 import {
   addRecipeStep,
   getOperation,
@@ -162,29 +163,7 @@ export function App() {
               </div>
               <div className="sample-image-grid">
                 {sampleAssets.map((sample) => (
-                  <article className="sample-image-card" key={sample.name}>
-                    <button
-                      aria-label={`Use ${sample.name} test image`}
-                      className="sample-image-select"
-                      type="button"
-                      onClick={() => stageSample(sample)}
-                    >
-                      <img alt={sample.alt} src={sample.previewUrl} />
-                      <span>
-                        <small>{sample.label}</small>
-                        <strong>{sample.name}</strong>
-                      </span>
-                    </button>
-                    <a
-                      aria-label={`View ${sample.name} by ${sample.creditName} on Unsplash`}
-                      href={sample.creditUrl}
-                      rel="noreferrer"
-                      target="_blank"
-                      title={`Photo by ${sample.creditName} on Unsplash`}
-                    >
-                      © {sample.creditName}
-                    </a>
-                  </article>
+                  <SampleImageDisplay key={sample.name} sample={sample} onSelect={stageSample} />
                 ))}
               </div>
             </section>
