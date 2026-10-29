@@ -94,7 +94,7 @@
     @apply size-[7px] rounded-full bg-accent;
   }
   .welcome-content {
-    @apply grid min-h-[calc(100dvh-64px)] max-w-[1400px] content-center gap-[52px] mx-auto px-7 pt-[clamp(36px,7vh,84px)] pb-15;
+    @apply grid min-h-[calc(100dvh-64px)] max-w-[1280px] content-center gap-[52px] mx-auto px-7 pt-[clamp(36px,7vh,84px)] pb-15;
   }
   .welcome-copy {
     @apply max-w-[980px];
@@ -104,6 +104,10 @@
   }
   .welcome-copy p:not(.overline) {
     @apply mt-7 mb-0 max-w-[70ch] text-[1.1rem] leading-[1.6] text-copy;
+  }
+
+  .welcome-actions {
+    @apply grid gap-6;
   }
   .dropzone {
     @apply flex min-h-[270px] flex-col items-center justify-center gap-3 border border-dashed border-dropzone-line bg-surface p-[34px] text-center transition-[border-color,background] duration-200 ease-in-out;
@@ -120,6 +124,68 @@
   .dropzone > span:not(.button):not(.dropzone-icon) {
     @apply text-[0.85rem] text-muted;
   }
+
+  .sample-images {
+    @apply grid gap-3;
+  }
+
+  .sample-images-heading {
+    @apply flex items-baseline justify-between gap-4;
+  }
+
+  .sample-images-heading h2 {
+    @apply m-0 text-[0.9rem] text-ink;
+  }
+
+  .sample-images-heading p {
+    @apply m-0 text-[0.78rem] text-muted;
+  }
+
+  .sample-image-grid {
+    @apply grid max-w-[660px] grid-cols-3 gap-3;
+  }
+
+  .sample-image-card {
+    @apply overflow-hidden border border-line bg-surface;
+  }
+
+  .sample-image-select {
+    @apply grid w-full text-left transition-[border-color,background] duration-150 ease-in-out;
+  }
+
+  .sample-image-select:hover {
+    @apply bg-surface-hover;
+  }
+
+  .sample-image-card:has(.sample-image-select:hover),
+  .sample-image-card:has(.sample-image-select:focus-visible) {
+    @apply border-accent;
+  }
+
+  .sample-image-select > img {
+    @apply aspect-[3/2] w-full object-cover;
+  }
+
+  .sample-image-select > span {
+    @apply grid gap-0.5 p-3;
+  }
+
+  .sample-image-select small {
+    @apply text-[0.5rem] font-bold uppercase tracking-[0.1em] text-accent;
+  }
+
+  .sample-image-select strong {
+    @apply text-[0.84rem] text-ink;
+  }
+
+  .sample-image-card > a {
+    @apply block overflow-hidden text-ellipsis whitespace-nowrap border-t border-line px-3 py-2 text-[0.68rem] text-muted underline underline-offset-2;
+  }
+
+  .sample-image-card > a:hover {
+    @apply text-accent;
+  }
+
   .button {
     @apply inline-flex min-h-[37px] items-center justify-center border border-transparent px-3.5 text-[0.84rem] font-[650] transition-[background,color] duration-150 ease-in-out;
   }
@@ -298,6 +364,7 @@
     .topbar {
       @apply px-[18px];
     }
+
     .mobile-tabs {
       @apply grid grid-cols-3 border-b border-line;
     }
@@ -335,6 +402,14 @@
     }
     .welcome-content {
       @apply gap-[38px] px-5;
+    }
+
+    .sample-images-heading {
+      @apply grid gap-1;
+    }
+
+    .sample-image-grid {
+      @apply grid-cols-2;
     }
     .topbar {
       @apply px-4;

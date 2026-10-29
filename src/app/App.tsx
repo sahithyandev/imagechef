@@ -10,6 +10,9 @@ import {
 } from "lucide-react";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 
+import modernAbstractImage from "@/assets/photo-abstract-painting.jpg";
+import alpineLakeImage from "@/assets/photo-alpine-lake.jpg";
+import rainLeavesImage from "@/assets/photo-rain-leaves.jpg";
 import {
   addRecipeStep,
   getOperation,
@@ -23,6 +26,46 @@ import {
 type WorkspacePanel = "input" | "recipe" | "output";
 
 const supportedImageTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
+const sampleAssets: Array<
+  ImageAsset & { alt: string; creditName: string; creditUrl: string; label: string; name: string }
+> = [
+  {
+    alt: "An alpine lake with snow-capped mountains",
+    creditName: "Jan Jobczyk",
+    creditUrl: "https://unsplash.com/photos/alpine-lake-in-mountain-valley-SB0pcLnpklU",
+    isSample: true,
+    label: "Nature",
+    name: "Alpine lake",
+    size: 0,
+    type: "image/jpeg",
+    previewUrl: alpineLakeImage,
+  },
+  {
+    alt: "Rain droplets on tropical green leaves",
+    creditName: "Iryna Marienko",
+    creditUrl:
+      "https://unsplash.com/photos/a-close-up-of-a-green-plant-with-drops-of-water-on-it-rHw6Tv1ef8s",
+    isSample: true,
+    label: "Nature",
+    name: "Rain leaves",
+    size: 0,
+    type: "image/jpeg",
+    previewUrl: rainLeavesImage,
+  },
+  {
+    alt: "A colourful contemporary abstract artwork",
+    creditName: "Fons Heijnsbroek",
+    creditUrl:
+      "https://unsplash.com/photos/abstract-painting-with-bold-brushstrokes-and-vibrant-colors-S1Cv0sXA7uI",
+    isSample: true,
+    label: "Modern art",
+    name: "Colour study",
+    size: 0,
+    type: "image/jpeg",
+    previewUrl: modernAbstractImage,
+  },
+];
 
 const formatFileSize = (bytes: number) =>
   new Intl.NumberFormat("en", { maximumFractionDigits: 1, style: "unit", unit: "megabyte" }).format(
@@ -38,7 +81,7 @@ export function App() {
 
   useEffect(() => {
     return () => {
-      if (asset?.previewUrl) URL.revokeObjectURL(asset.previewUrl);
+      if (asset?.previewUrl && !asset.isSample) URL.revokeObjectURL(asset.previewUrl);
     };
   }, [asset]);
 
@@ -69,6 +112,11 @@ export function App() {
     });
   };
 
+  const stageSample = (sample: ImageAsset) => {
+    setError(null);
+    setAsset(sample);
+  };
+
   const updateParameter = (stepId: string, key: string, value: OperationParameter) => {
     setRecipe((currentRecipe) =>
       currentRecipe.map((step) =>
@@ -92,20 +140,55 @@ export function App() {
               output. Processing is intentionally not connected in this scaffold.
             </p>
           </div>
-          <label className="dropzone">
-            <input
-              className="sr-only"
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              onChange={(event) => stageFile(event.target.files?.[0])}
-            />
-            <span className="dropzone-icon">
-              <ImageUp size={26} strokeWidth={1.7} />
-            </span>
-            <strong>Choose an image to begin</strong>
-            <span>PNG, JPEG, WebP, or GIF</span>
-            <span className="button button-primary">Select image</span>
-          </label>
+          <div className="welcome-actions">
+            <label className="dropzone">
+              <input
+                className="sr-only"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={(event) => stageFile(event.target.files?.[0])}
+              />
+              <span className="dropzone-icon">
+                <ImageUp size={26} strokeWidth={1.7} />
+              </span>
+              <strong>Upload an image</strong>
+              <span>PNG, JPEG, WebP, or GIF</span>
+              <span className="button button-primary">Select image</span>
+            </label>
+            <section className="sample-images" aria-labelledby="sample-images-title">
+              <div className="sample-images-heading">
+                <h2 id="sample-images-title">Try a test image</h2>
+                <p>Choose a built-in image to explore the workspace.</p>
+              </div>
+              <div className="sample-image-grid">
+                {sampleAssets.map((sample) => (
+                  <article className="sample-image-card" key={sample.name}>
+                    <button
+                      aria-label={`Use ${sample.name} test image`}
+                      className="sample-image-select"
+                      type="button"
+                      onClick={() => stageSample(sample)}
+                    >
+                      <img alt={sample.alt} src={sample.previewUrl} />
+                      <span>
+                        <small>{sample.label}</small>
+                        <strong>{sample.name}</strong>
+                      </span>
+                    </button>
+                    <a
+                      aria-label={`View ${sample.name} by ${sample.creditName} on Unsplash`}
+                      href={sample.creditUrl}
+                      rel="noreferrer"
+                      target="_blank"
+                      title={`Photo by ${sample.creditName} on Unsplash`}
+                    >
+                      © {sample.creditName}
+                    </a>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </div>
           {error ? (
             <p className="inline-error" role="alert">
               {error}
@@ -152,7 +235,9 @@ export function App() {
           <div className="file-details">
             <strong>{asset.name}</strong>
             <span>
-              {asset.type.replace("image/", "").toUpperCase()} · {formatFileSize(asset.size)}
+              {asset.isSample
+                ? "SAMPLE · Built in"
+                : `${asset.type.replace("image/", "").toUpperCase()} · ${formatFileSize(asset.size)}`}
             </span>
           </div>
           <label className="secondary-dropzone">

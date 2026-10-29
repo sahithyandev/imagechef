@@ -18,6 +18,7 @@ export interface RecipeStep {
 }
 
 export interface ImageAsset {
+  isSample?: boolean;
   name: string;
   size: number;
   type: string;

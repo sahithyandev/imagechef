@@ -1,6 +1,6 @@
 # Image Chef
 
-The project foundation for a browser-first image transformation application. It currently contains only shared tooling and a blank application shell—no image-domain behavior or UI has been implemented.
+A browser-first image transformation workspace. Users can upload an image or start with one of the built-in test photographs.
 
 ## Stack
 
@@ -23,4 +23,10 @@ bun run typecheck
 bun run check
 ```
 
-`src/app/App.tsx` is intentionally empty. Shared browser code should live under `src/`; keep domain features out of the project root.
+## Sample-image credits
+
+The built-in test photographs are downloaded from Unsplash and are used under the [Unsplash License](https://unsplash.com/license).
+
+- **Alpine lake** — Photo by [Jan Jobczyk](https://unsplash.com/@janjobczyk), [source](https://unsplash.com/photos/alpine-lake-in-mountain-valley-SB0pcLnpklU)
+- **Rain leaves** — Photo by [Iryna Marienko](https://unsplash.com/@iamr_r_r), [source](https://unsplash.com/photos/a-close-up-of-a-green-plant-with-drops-of-water-on-it-rHw6Tv1ef8s)
+- **Colour study** — Artwork photographed by [Fons Heijnsbroek](https://unsplash.com/@heijnsbroek_abstract_art), [source](https://unsplash.com/photos/abstract-painting-with-bold-brushstrokes-and-vibrant-colors-S1Cv0sXA7uI)
