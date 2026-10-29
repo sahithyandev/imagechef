@@ -29,6 +29,15 @@ import {
 type WorkspacePanel = "library" | "recipe" | "preview";
 
 const supportedImageTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const workspaceDraftStorageKey = "image-chef.workspace-draft";
+
+type WorkspaceDraft = {
+  activePanel: WorkspacePanel;
+  asset: ImageAsset | null;
+  collapsedCategories: Record<string, boolean>;
+  query: string;
+  recipe: RecipeStep[];
+};
 
 const sampleAssets: Array<
   ImageAsset & { alt: string; creditName: string; creditUrl: string; label: string; name: string }
@@ -75,6 +84,69 @@ const formatFileSize = (bytes: number) =>
     bytes / 1_000_000,
   );
 
+const readWorkspaceDraft = (): WorkspaceDraft | null => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const serializedDraft = window.sessionStorage.getItem(workspaceDraftStorageKey);
+
+    if (!serializedDraft) return null;
+
+    const draft: unknown = JSON.parse(serializedDraft);
+
+    if (!isWorkspaceDraft(draft)) return null;
+
+    return draft;
+  } catch {
+    return null;
+  }
+};
+
+const isWorkspaceDraft = (value: unknown): value is WorkspaceDraft => {
+  if (!value || typeof value !== "object") return false;
+
+  const draft = value as Partial<WorkspaceDraft>;
+
+  return (
+    (draft.activePanel === "library" ||
+      draft.activePanel === "recipe" ||
+      draft.activePanel === "preview") &&
+    (draft.asset === null || isImageAsset(draft.asset)) &&
+    typeof draft.collapsedCategories === "object" &&
+    draft.collapsedCategories !== null &&
+    typeof draft.query === "string" &&
+    Array.isArray(draft.recipe)
+  );
+};
+
+const isImageAsset = (value: unknown): value is ImageAsset => {
+  if (!value || typeof value !== "object") return false;
+
+  const asset = value as Partial<ImageAsset>;
+
+  return (
+    typeof asset.name === "string" &&
+    typeof asset.size === "number" &&
+    typeof asset.type === "string" &&
+    typeof asset.previewUrl === "string"
+  );
+};
+
+const readFileAsDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.addEventListener("error", () => reject(reader.error));
+    reader.addEventListener("load", () => {
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+      } else {
+        reject(new Error("The image could not be read as a data URL."));
+      }
+    });
+    reader.readAsDataURL(file);
+  });
+
 export function App() {
   const [asset, setAsset] = useState<ImageAsset | null>(null);
   const [recipe, setRecipe] = useState<RecipeStep[]>([]);
@@ -82,12 +154,33 @@ export function App() {
   const [activePanel, setActivePanel] = useState<WorkspacePanel>("recipe");
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
+  const [hasRestoredWorkspace, setHasRestoredWorkspace] = useState(false);
 
   useEffect(() => {
-    return () => {
-      if (asset?.previewUrl && !asset.isSample) URL.revokeObjectURL(asset.previewUrl);
-    };
-  }, [asset]);
+    const savedDraft = readWorkspaceDraft();
+
+    if (savedDraft) {
+      setAsset(savedDraft.asset);
+      setRecipe(savedDraft.recipe);
+      setQuery(savedDraft.query);
+      setActivePanel(savedDraft.activePanel);
+      setCollapsedCategories(savedDraft.collapsedCategories);
+    }
+
+    setHasRestoredWorkspace(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasRestoredWorkspace) return;
+
+    const draft: WorkspaceDraft = { activePanel, asset, collapsedCategories, query, recipe };
+
+    try {
+      window.sessionStorage.setItem(workspaceDraftStorageKey, JSON.stringify(draft));
+    } catch {
+      // The current workspace remains usable if browser storage is unavailable or full.
+    }
+  }, [activePanel, asset, collapsedCategories, hasRestoredWorkspace, query, recipe]);
 
   const operationCategories = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -119,20 +212,26 @@ export function App() {
     setCollapsedCategories((current) => ({ ...current, [category]: !current[category] }));
   };
 
-  const stageFile = (file: File | undefined) => {
+  const stageFile = async (file: File | undefined) => {
     if (!file) return;
     if (!supportedImageTypes.includes(file.type)) {
       setError("Choose a PNG, JPEG, WebP, or GIF image to stage in the workspace.");
       return;
     }
 
-    setError(null);
-    setAsset({
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      previewUrl: URL.createObjectURL(file),
-    });
+    try {
+      const previewUrl = await readFileAsDataUrl(file);
+
+      setError(null);
+      setAsset({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        previewUrl,
+      });
+    } catch {
+      setError("The selected image could not be staged. Try another file.");
+    }
   };
 
   const stageSample = (sample: ImageAsset) => {
@@ -169,7 +268,7 @@ export function App() {
                 className="sr-only"
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
-                onChange={(event) => stageFile(event.target.files?.[0])}
+                onChange={(event) => void stageFile(event.target.files?.[0])}
               />
               <span className="dropzone-icon">
                 <ImageUp size={26} strokeWidth={1.7} />
@@ -349,7 +448,7 @@ export function App() {
                 className="sr-only"
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
-                onChange={(event) => stageFile(event.target.files?.[0])}
+                onChange={(event) => void stageFile(event.target.files?.[0])}
               />
               Replace image
             </label>
