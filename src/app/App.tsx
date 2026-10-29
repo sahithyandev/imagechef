@@ -1,6 +1,7 @@
 import {
   ArrowDown,
   ArrowUp,
+  ChevronDown,
   FileImage,
   ImageUp,
   Plus,
@@ -19,12 +20,13 @@ import {
   getOperation,
   type ImageAsset,
   moveRecipeStep,
+  type OperationDefinition,
   type OperationParameter,
   operationCatalogue,
   type RecipeStep,
 } from "@/features/workspace/model";
 
-type WorkspacePanel = "input" | "recipe" | "output";
+type WorkspacePanel = "library" | "recipe" | "preview";
 
 const supportedImageTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
@@ -77,7 +79,8 @@ export function App() {
   const [asset, setAsset] = useState<ImageAsset | null>(null);
   const [recipe, setRecipe] = useState<RecipeStep[]>([]);
   const [query, setQuery] = useState("");
-  const [activePanel, setActivePanel] = useState<WorkspacePanel>("input");
+  const [activePanel, setActivePanel] = useState<WorkspacePanel>("recipe");
+  const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -86,16 +89,35 @@ export function App() {
     };
   }, [asset]);
 
-  const visibleOperations = useMemo(() => {
+  const operationCategories = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    if (!normalizedQuery) return operationCatalogue;
+    const visibleOperations = normalizedQuery
+      ? operationCatalogue.filter((operation) =>
+          `${operation.name} ${operation.description} ${operation.category}`
+            .toLowerCase()
+            .includes(normalizedQuery),
+        )
+      : operationCatalogue;
 
-    return operationCatalogue.filter((operation) =>
-      `${operation.name} ${operation.description} ${operation.category}`
-        .toLowerCase()
-        .includes(normalizedQuery),
+    return visibleOperations.reduce<Array<{ category: string; operations: OperationDefinition[] }>>(
+      (categories, operation) => {
+        const existingCategory = categories.find(({ category }) => category === operation.category);
+
+        if (existingCategory) {
+          existingCategory.operations.push(operation);
+        } else {
+          categories.push({ category: operation.category, operations: [operation] });
+        }
+
+        return categories;
+      },
+      [],
     );
   }, [query]);
+
+  const toggleCategory = (category: string) => {
+    setCollapsedCategories((current) => ({ ...current, [category]: !current[category] }));
+  };
 
   const stageFile = (file: File | undefined) => {
     if (!file) return;
@@ -193,7 +215,7 @@ export function App() {
       </header>
 
       <nav className="mobile-tabs" aria-label="Workspace panels">
-        {(["input", "recipe", "output"] as const).map((panel) => (
+        {(["library", "recipe", "preview"] as const).map((panel) => (
           <button
             className={activePanel === panel ? "active" : ""}
             key={panel}
@@ -206,32 +228,13 @@ export function App() {
       </nav>
 
       <section className={`workspace active-${activePanel}`} aria-label="Image recipe workspace">
-        <section className="workspace-panel input-panel" aria-labelledby="input-title">
-          <PanelHeading icon={<FileImage size={17} />} title="Input" id="input-title" />
-          <div className="image-stage">
-            <img alt={`Preview of ${asset.name}`} src={asset.previewUrl} />
-          </div>
-          <div className="file-details">
-            <strong>{asset.name}</strong>
-            <span>
-              {asset.isSample
-                ? "SAMPLE · Built in"
-                : `${asset.type.replace("image/", "").toUpperCase()} · ${formatFileSize(asset.size)}`}
-            </span>
-          </div>
-          <label className="secondary-dropzone">
-            <input
-              className="sr-only"
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              onChange={(event) => stageFile(event.target.files?.[0])}
-            />
-            Replace image
-          </label>
-        </section>
-
-        <section className="workspace-panel recipe-panel" aria-labelledby="recipe-title">
-          <PanelHeading icon={<SlidersHorizontal size={17} />} title="Recipe" id="recipe-title" />
+        <section className="workspace-panel library-panel" aria-labelledby="library-title">
+          <PanelHeading
+            icon={<SlidersHorizontal size={17} />}
+            title="Operations"
+            id="library-title"
+          />
+          <p className="panel-intro">Add transformations to your recipe.</p>
           <div className="search-field">
             <Search size={16} aria-hidden="true" />
             <input
@@ -242,28 +245,63 @@ export function App() {
             />
           </div>
           <div className="operation-catalogue">
-            {visibleOperations.map((operation) => (
-              <button
-                className="operation-option"
-                key={operation.id}
-                type="button"
-                onClick={() => setRecipe((current) => addRecipeStep(current, operation.id))}
-              >
-                <span>
-                  <strong>{operation.name}</strong>
-                  <small>{operation.category}</small>
-                </span>
-                <Plus size={16} aria-hidden="true" />
-              </button>
-            ))}
+            {operationCategories.map(({ category, operations }) => {
+              const isCollapsed = collapsedCategories[category] && !query.trim();
+
+              return (
+                <section className="operation-category" key={category}>
+                  <button
+                    aria-controls={`category-${category}`}
+                    aria-expanded={!isCollapsed}
+                    className="category-trigger"
+                    type="button"
+                    onClick={() => toggleCategory(category)}
+                  >
+                    <span>
+                      {category} <small>{operations.length}</small>
+                    </span>
+                    <ChevronDown className={isCollapsed ? "-rotate-90" : ""} size={16} />
+                  </button>
+                  {!isCollapsed ? (
+                    <div id={`category-${category}`}>
+                      {operations.map((operation) => (
+                        <button
+                          className="operation-option"
+                          key={operation.id}
+                          type="button"
+                          onClick={() =>
+                            setRecipe((current) => addRecipeStep(current, operation.id))
+                          }
+                        >
+                          <span>
+                            <strong>{operation.name}</strong>
+                            <small>{operation.description}</small>
+                          </span>
+                          <Plus size={16} aria-hidden="true" />
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </section>
+              );
+            })}
+            {operationCategories.length === 0 ? (
+              <p className="empty-library">No operations match “{query}”.</p>
+            ) : null}
           </div>
+        </section>
+
+        <section className="workspace-panel recipe-panel" aria-labelledby="recipe-title">
+          <PanelHeading icon={<SlidersHorizontal size={17} />} title="Recipe" id="recipe-title" />
           <div className="recipe-list" aria-live="polite">
             <div className="section-label">
               <span>Recipe steps</span>
               <span>{recipe.length}</span>
             </div>
             {recipe.length === 0 ? (
-              <p className="empty-recipe">Add an operation to begin composing the recipe.</p>
+              <p className="empty-recipe">
+                Choose an operation from the library to start this recipe.
+              </p>
             ) : (
               recipe.map((step, index) => (
                 <RecipeStepCard
@@ -292,25 +330,50 @@ export function App() {
           </div>
         </section>
 
-        <section className="workspace-panel output-panel" aria-labelledby="output-title">
-          <PanelHeading icon={<ImageUp size={17} />} title="Output" id="output-title" />
-          <div className="output-preview">
-            <img alt="Source staged as a placeholder output" src={asset.previewUrl} />
-            <div className="preview-scrim">
-              <span>Preview unavailable</span>
+        <section className="workspace-panel preview-panel" aria-label="Input and output previews">
+          <section className="preview-section" aria-labelledby="input-title">
+            <PanelHeading icon={<FileImage size={17} />} title="Input" id="input-title" />
+            <div className="image-stage">
+              <img alt={`Preview of ${asset.name}`} src={asset.previewUrl} />
             </div>
-          </div>
-          <div className="output-copy">
-            <strong>Processing is not connected yet.</strong>
-            <p>
-              {recipe.length
-                ? `${recipe.filter((step) => step.enabled).length} active recipe step${recipe.filter((step) => step.enabled).length === 1 ? "" : "s"} staged for this output.`
-                : "Add operations to stage a transform recipe."}
-            </p>
-          </div>
-          <button className="button button-secondary button-wide" disabled type="button">
-            Export output
-          </button>
+            <div className="file-details">
+              <strong>{asset.name}</strong>
+              <span>
+                {asset.isSample
+                  ? "SAMPLE · Built in"
+                  : `${asset.type.replace("image/", "").toUpperCase()} · ${formatFileSize(asset.size)}`}
+              </span>
+            </div>
+            <label className="secondary-dropzone">
+              <input
+                className="sr-only"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={(event) => stageFile(event.target.files?.[0])}
+              />
+              Replace image
+            </label>
+          </section>
+          <section className="preview-section output-section" aria-labelledby="output-title">
+            <PanelHeading icon={<ImageUp size={17} />} title="Output" id="output-title" />
+            <div className="output-preview">
+              <img alt="Source staged as a placeholder output" src={asset.previewUrl} />
+              <div className="preview-scrim">
+                <span>Preview unavailable</span>
+              </div>
+            </div>
+            <div className="output-copy">
+              <strong>Processing is not connected yet.</strong>
+              <p>
+                {recipe.length
+                  ? `${recipe.filter((step) => step.enabled).length} active recipe step${recipe.filter((step) => step.enabled).length === 1 ? "" : "s"} staged for this output.`
+                  : "Add operations to stage a transform recipe."}
+              </p>
+            </div>
+            <button className="button button-secondary button-wide" disabled type="button">
+              Export output
+            </button>
+          </section>
         </section>
       </section>
     </main>

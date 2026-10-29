@@ -167,7 +167,7 @@
     @apply flex items-center gap-5;
   }
   .workspace {
-    @apply grid min-h-[calc(100dvh-64px)] grid-cols-[minmax(220px,0.8fr)_minmax(350px,1.15fr)_minmax(260px,0.9fr)];
+    @apply grid min-h-[calc(100dvh-64px)] grid-cols-[minmax(220px,0.78fr)_minmax(360px,1.22fr)_minmax(300px,0.95fr)];
   }
   .workspace-panel {
     @apply min-w-0 border-r border-line p-6;
@@ -180,6 +180,9 @@
   }
   .panel-heading svg {
     @apply text-accent;
+  }
+  .panel-intro {
+    @apply -mt-3 mb-5 text-[0.8rem] leading-[1.45] text-muted;
   }
   .image-stage,
   .output-preview {
@@ -213,13 +216,28 @@
     @apply text-placeholder;
   }
   .operation-catalogue {
-    @apply mt-[18px] grid grid-cols-2 gap-px;
+    @apply mt-4 grid gap-2;
+  }
+  .operation-category {
+    @apply border-b border-line pb-2;
+  }
+  .category-trigger {
+    @apply flex w-full items-center justify-between bg-transparent px-0 py-2.5 text-left text-[0.72rem] font-bold uppercase tracking-[0.08em] text-muted;
+  }
+  .category-trigger > span {
+    @apply flex items-center gap-2;
+  }
+  .category-trigger small {
+    @apply text-[0.65rem] font-medium tracking-normal text-placeholder;
+  }
+  .category-trigger svg {
+    @apply transition-transform duration-150 ease-out;
   }
   .operation-option {
-    @apply flex min-h-[68px] items-center justify-between gap-2.5 border-0 bg-surface-raised p-[11px] text-left text-ink;
+    @apply flex w-full min-h-[62px] items-center justify-between gap-2.5 border-0 border-t border-line-subtle bg-transparent px-1 py-2.5 text-left text-ink;
   }
   .operation-option:hover {
-    @apply bg-surface-active;
+    @apply bg-surface-hover;
   }
   .operation-option strong,
   .operation-option small {
@@ -229,13 +247,16 @@
     @apply text-[0.8rem];
   }
   .operation-option small {
-    @apply mt-[3px] text-[0.66rem] text-muted;
+    @apply mt-[3px] pr-2 text-[0.69rem] leading-[1.35] text-muted;
   }
   .operation-option svg {
     @apply shrink-0 text-accent;
   }
+  .empty-library {
+    @apply m-0 px-1 py-5 text-[0.8rem] leading-[1.45] text-muted;
+  }
   .recipe-list {
-    @apply mt-7;
+    @apply mt-0;
   }
   .section-label {
     @apply flex justify-between text-[0.7rem] font-bold uppercase tracking-[0.08em] text-muted;
@@ -288,8 +309,14 @@
   .parameter-grid input[type="checkbox"] {
     @apply my-0.5 size-4 accent-accent;
   }
-  .output-panel {
+  .preview-panel {
     @apply flex flex-col;
+  }
+  .preview-section {
+    @apply flex min-h-0 flex-1 flex-col;
+  }
+  .output-section {
+    @apply mt-6 border-t border-line pt-6;
   }
   .output-preview {
     @apply relative min-h-0;
@@ -339,9 +366,12 @@
     .workspace-panel {
       @apply hidden border-0 px-[18px] py-5;
     }
-    .workspace.active-input .input-panel,
+    .preview-panel {
+      @apply gap-6;
+    }
+    .workspace.active-library .library-panel,
     .workspace.active-recipe .recipe-panel,
-    .workspace.active-output .output-panel {
+    .workspace.active-preview .preview-panel {
       @apply flex;
     }
     .workspace.active-recipe .recipe-panel {
@@ -350,8 +380,14 @@
     .image-stage {
       @apply min-h-[min(62vh,480px)];
     }
+    .preview-section {
+      @apply flex-none;
+    }
+    .output-section {
+      @apply mt-0;
+    }
     .output-preview {
-      @apply min-h-[min(52vh,400px)];
+      @apply min-h-[min(42vh,360px)];
     }
   }
 
