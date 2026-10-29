@@ -86,7 +86,6 @@ export function App() {
         </header>
         <section className="welcome-content" aria-labelledby="welcome-title">
           <div className="welcome-copy">
-            <p className="overline">IMAGE TRANSFORMATION, STAGED</p>
             <h1 id="welcome-title">Build an image recipe you can inspect.</h1>
             <p>
               Start with an image, compose a repeatable sequence of operations, then inspect the

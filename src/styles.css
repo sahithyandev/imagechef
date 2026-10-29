@@ -101,13 +101,13 @@
     display: grid;
     gap: 52px;
     margin: 0 auto;
-    max-width: 1060px;
+    max-width: 1400px;
     min-height: calc(100dvh - 64px);
-    padding: clamp(60px, 12vh, 140px) 28px 60px;
+    padding: clamp(36px, 7vh, 84px) 28px 60px;
     place-content: center;
   }
   .welcome-copy {
-    max-width: 700px;
+    max-width: 980px;
   }
   .overline {
     color: #c4ff5b;
@@ -121,7 +121,7 @@
     letter-spacing: -0.065em;
     line-height: 0.91;
     margin: 0;
-    max-width: 8ch;
+    max-width: 20ch;
     text-wrap: balance;
   }
   .welcome-copy p:not(.overline) {
@@ -129,7 +129,7 @@
     font-size: 1.1rem;
     line-height: 1.6;
     margin: 28px 0 0;
-    max-width: 58ch;
+    max-width: 70ch;
   }
   .dropzone {
     align-items: center;
