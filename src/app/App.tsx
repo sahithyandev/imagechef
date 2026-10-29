@@ -252,7 +252,7 @@ export function App() {
       <main className="app-shell welcome-shell">
         <header className="topbar welcome-topbar">
           <Brand />
-          <span className="status-note">Browser-first recipe workspace</span>
+          <span className="status-note">Browser-first recipe workspace · draft-safe</span>
         </header>
         <section className="welcome-content" aria-labelledby="welcome-title">
           <div className="welcome-copy">
@@ -305,7 +305,7 @@ export function App() {
         <Brand />
         <div className="topbar-actions">
           <span className="status-note">
-            <span className="status-dot" /> Recipe draft
+            <span className="status-dot" /> Recipe draft · refresh-safe
           </span>
           <button className="button button-secondary" type="button" onClick={() => setAsset(null)}>
             New image
