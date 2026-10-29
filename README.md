@@ -23,6 +23,10 @@ bun run typecheck
 bun run check
 ```
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the project's code conventions and verification requirements.
+
 ## Sample-image credits
 
 The built-in test photographs are downloaded from Unsplash and are used under the [Unsplash License](https://unsplash.com/license).

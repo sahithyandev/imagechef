@@ -1,5 +1,7 @@
 Default to using Bun instead of Node.js.
 
+For project code conventions, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 - Use `bun <file>` instead of `node <file>` or `ts-node <file>`
 - Use `bun test` instead of `jest` or `vitest`
 - Use `bun check` instead of `tsc --noEmit`
