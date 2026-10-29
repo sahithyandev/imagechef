@@ -152,7 +152,6 @@ export function App() {
         setRecipe((current) => addRecipeStep(current, operationId))
       }
       onNewImage={() => setAsset(null)}
-      onReplaceImage={stageFile}
       onSetActivePanel={setActivePanel}
       onSetCollapsedCategories={setCollapsedCategories}
       onSetQuery={setQuery}

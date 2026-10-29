@@ -170,10 +170,7 @@
     @apply grid min-h-[calc(100dvh-64px)] grid-cols-[minmax(220px,0.78fr)_minmax(360px,1.22fr)_minmax(300px,0.95fr)];
   }
   .workspace-panel {
-    @apply min-w-0 border-r border-line p-6;
-  }
-  .workspace-panel:last-child {
-    @apply border-r-0;
+    @apply min-w-0 p-6;
   }
   .panel-heading {
     @apply mt-0 mb-[22px] flex items-center gap-[9px] text-[0.86rem] tracking-[-0.01em] text-ink;
@@ -193,18 +190,14 @@
     @apply size-full max-h-[420px] object-contain;
   }
   .file-details {
-    @apply grid gap-1 border-b border-line py-4;
+    @apply grid py-4;
   }
   .file-details strong {
     @apply overflow-hidden text-[0.87rem] text-ellipsis whitespace-nowrap;
   }
-  .file-details span,
   .output-copy p,
   .recipe-step p {
     @apply text-[0.78rem] leading-[1.45] text-muted;
-  }
-  .secondary-dropzone {
-    @apply mt-[18px] inline-block text-[0.8rem] font-[650] text-accent;
   }
   .search-field {
     @apply flex items-center gap-[9px] border-b border-line-strong pb-[9px] text-muted;
@@ -316,7 +309,7 @@
     @apply flex min-h-0 flex-1 flex-col;
   }
   .output-section {
-    @apply mt-6 border-t border-line pt-6;
+    @apply mt-3;
   }
   .output-preview {
     @apply relative min-h-0;
@@ -367,7 +360,7 @@
       @apply hidden border-0 px-[18px] py-5;
     }
     .preview-panel {
-      @apply gap-6;
+      @apply gap-3;
     }
     .workspace.active-library .library-panel,
     .workspace.active-recipe .recipe-panel,

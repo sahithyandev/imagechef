@@ -3,20 +3,7 @@ import { FileImage, ImageUp } from "lucide-react";
 import { PanelHeading } from "@/components/PanelHeading";
 import type { ImageAsset, RecipeStep } from "@/features/workspace/model";
 
-const formatFileSize = (bytes: number) =>
-  new Intl.NumberFormat("en", { maximumFractionDigits: 1, style: "unit", unit: "megabyte" }).format(
-    bytes / 1_000_000,
-  );
-
-export function WorkspacePreview({
-  asset,
-  onReplaceImage,
-  recipe,
-}: {
-  asset: ImageAsset;
-  onReplaceImage: (file: File | undefined) => Promise<void>;
-  recipe: RecipeStep[];
-}) {
+export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe: RecipeStep[] }) {
   const activeSteps = recipe.filter((step) => step.enabled).length;
 
   return (
@@ -28,21 +15,7 @@ export function WorkspacePreview({
         </div>
         <div className="file-details">
           <strong>{asset.name}</strong>
-          <span>
-            {asset.isSample
-              ? "SAMPLE · Built in"
-              : `${asset.type.replace("image/", "").toUpperCase()} · ${formatFileSize(asset.size)}`}
-          </span>
         </div>
-        <label className="secondary-dropzone">
-          <input
-            className="sr-only"
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            onChange={(event) => void onReplaceImage(event.target.files?.[0])}
-          />
-          Replace image
-        </label>
       </section>
       <section className="preview-section output-section" aria-labelledby="output-title">
         <PanelHeading icon={<ImageUp size={17} />} title="Output" id="output-title" />

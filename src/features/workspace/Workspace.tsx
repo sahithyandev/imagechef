@@ -21,7 +21,6 @@ export function Workspace({
   collapsedCategories,
   onAddOperation,
   onNewImage,
-  onReplaceImage,
   onSetActivePanel,
   onSetCollapsedCategories,
   onSetQuery,
@@ -34,7 +33,6 @@ export function Workspace({
   collapsedCategories: Record<string, boolean>;
   onAddOperation: (operationId: OperationDefinition["id"]) => void;
   onNewImage: () => void;
-  onReplaceImage: (file: File | undefined) => Promise<void>;
   onSetActivePanel: (panel: WorkspacePanel) => void;
   onSetCollapsedCategories: Dispatch<SetStateAction<Record<string, boolean>>>;
   onSetQuery: (query: string) => void;
@@ -131,7 +129,7 @@ export function Workspace({
           onUpdateParameter={updateParameter}
           recipe={recipe}
         />
-        <WorkspacePreview asset={asset} onReplaceImage={onReplaceImage} recipe={recipe} />
+        <WorkspacePreview asset={asset} recipe={recipe} />
       </section>
     </main>
   );
