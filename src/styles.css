@@ -2,21 +2,38 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-canvas: #141614;
+  --color-ink: #eef1ea;
+  --color-accent: #c4ff5b;
+  --color-muted: #abb1a8;
+  --color-copy: #bfc5ba;
+  --color-placeholder: #899087;
+  --color-surface: #1d201d;
+  --color-surface-raised: #222521;
+  --color-surface-hover: #242823;
+  --color-surface-active: #2b302a;
+  --color-stage: #0c0d0c;
+  --color-glow: #343b2a;
+  --color-dropzone-line: #778071;
+  --color-scrim: #141614b8;
+  --color-line: #41473f;
+  --color-line-strong: #697167;
+  --color-line-subtle: #4b5049;
+  --color-error-surface: #44291f;
+  --color-error: #ffb7a0;
 }
 
 @layer base {
   * {
-    border-color: currentcolor;
-    box-sizing: border-box;
+    @apply box-border border-current;
   }
 
   html {
-    font-family: var(--font-sans);
-    text-rendering: optimizelegibility;
+    @apply font-sans [text-rendering:optimizelegibility];
   }
 
   body {
-    @apply m-0 min-w-80 bg-[#141614] text-[#eef1ea] antialiased;
+    @apply m-0 min-w-80 bg-canvas text-ink antialiased;
   }
 
   button,
@@ -28,29 +45,24 @@
 
   button:not(:disabled),
   label {
-    cursor: pointer;
+    @apply cursor-pointer;
   }
 
   button:focus-visible,
   input:focus-visible,
   label:has(input:focus-visible) {
-    outline: 2px solid #c4ff5b;
-    outline-offset: 3px;
+    @apply outline-2 outline-offset-3 outline-accent;
   }
 
   ::selection {
-    background: #c4ff5b;
-    color: #141614;
+    @apply bg-accent text-canvas;
   }
 
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    @apply size-2.5;
   }
   ::-webkit-scrollbar-thumb {
-    background: #4b5049;
-    border: 3px solid #1d201d;
-    border-radius: 10px;
+    @apply rounded-[10px] border-[3px] border-surface bg-line-subtle;
   }
 }
 
@@ -60,481 +72,279 @@
   }
 
   .welcome-shell {
-    background: radial-gradient(circle at 82% 12%, #343b2a 0, transparent 31rem), #141614;
+    @apply bg-canvas;
+    background-image: radial-gradient(circle at 82% 12%, var(--color-glow) 0, transparent 31rem);
   }
   .topbar {
-    align-items: center;
-    border-bottom: 1px solid #41473f;
-    display: flex;
-    justify-content: space-between;
-    min-height: 64px;
-    padding: 0 28px;
+    @apply flex min-h-16 items-center justify-between border-b border-line px-7;
   }
   .welcome-topbar {
-    border-bottom-color: transparent;
+    @apply border-b-transparent;
   }
   .brand {
-    color: #eef1ea;
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: -0.05em;
-    text-decoration: none;
+    @apply text-[1.15rem] font-bold tracking-[-0.05em] text-ink no-underline;
   }
   .brand span {
-    color: #c4ff5b;
-    font-weight: 500;
+    @apply font-medium text-accent;
   }
   .status-note {
-    align-items: center;
-    color: #abb1a8;
-    display: flex;
-    font-size: 0.78rem;
-    gap: 8px;
+    @apply flex items-center gap-2 text-[0.78rem] text-muted;
   }
   .status-dot {
-    background: #c4ff5b;
-    border-radius: 100%;
-    height: 7px;
-    width: 7px;
+    @apply size-[7px] rounded-full bg-accent;
   }
   .welcome-content {
-    display: grid;
-    gap: 52px;
-    margin: 0 auto;
-    max-width: 1400px;
-    min-height: calc(100dvh - 64px);
-    padding: clamp(36px, 7vh, 84px) 28px 60px;
-    place-content: center;
+    @apply grid min-h-[calc(100dvh-64px)] max-w-[1400px] content-center gap-[52px] mx-auto px-7 pt-[clamp(36px,7vh,84px)] pb-15;
   }
   .welcome-copy {
-    max-width: 980px;
-  }
-  .overline {
-    color: #c4ff5b;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    margin: 0 0 18px;
+    @apply max-w-[980px];
   }
   .welcome-copy h1 {
-    font-size: clamp(2.8rem, 7vw, 5.7rem);
-    letter-spacing: -0.065em;
-    line-height: 0.91;
-    margin: 0;
-    max-width: 20ch;
-    text-wrap: balance;
+    @apply m-0 max-w-[20ch] text-[clamp(2.8rem,7vw,5.7rem)] leading-[0.91] tracking-[-0.065em] text-balance;
   }
   .welcome-copy p:not(.overline) {
-    color: #bfc5ba;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin: 28px 0 0;
-    max-width: 70ch;
+    @apply mt-7 mb-0 max-w-[70ch] text-[1.1rem] leading-[1.6] text-copy;
   }
   .dropzone {
-    align-items: center;
-    background: #1d201d;
-    border: 1px dashed #778071;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    justify-content: center;
-    min-height: 270px;
-    padding: 34px;
-    text-align: center;
-    transition:
-      border-color 0.2s ease,
-      background 0.2s ease;
+    @apply flex min-h-[270px] flex-col items-center justify-center gap-3 border border-dashed border-dropzone-line bg-surface p-[34px] text-center transition-[border-color,background] duration-200 ease-in-out;
   }
   .dropzone:hover {
-    background: #242823;
-    border-color: #c4ff5b;
+    @apply border-accent bg-surface-hover;
   }
   .dropzone-icon {
-    align-items: center;
-    background: #c4ff5b;
-    color: #141614;
-    display: grid;
-    height: 48px;
-    justify-content: center;
-    width: 48px;
+    @apply grid size-12 place-content-center bg-accent text-canvas;
   }
   .dropzone > strong {
-    font-size: 1.1rem;
+    @apply text-[1.1rem];
   }
   .dropzone > span:not(.button):not(.dropzone-icon) {
-    color: #abb1a8;
-    font-size: 0.85rem;
+    @apply text-[0.85rem] text-muted;
   }
   .button {
-    align-items: center;
-    border: 1px solid transparent;
-    display: inline-flex;
-    font-size: 0.84rem;
-    font-weight: 650;
-    justify-content: center;
-    min-height: 37px;
-    padding: 0 14px;
-    transition:
-      background 0.15s ease,
-      color 0.15s ease;
+    @apply inline-flex min-h-[37px] items-center justify-center border border-transparent px-3.5 text-[0.84rem] font-[650] transition-[background,color] duration-150 ease-in-out;
   }
   .button-primary {
-    background: #c4ff5b;
-    color: #141614;
-    margin-top: 6px;
+    @apply mt-1.5 bg-accent text-canvas;
   }
   .button-secondary {
-    background: transparent;
-    border-color: #697167;
-    color: #eef1ea;
+    @apply border-line-strong bg-transparent text-ink;
   }
   .button-secondary:hover:not(:disabled) {
-    border-color: #c4ff5b;
-    color: #c4ff5b;
+    @apply border-accent text-accent;
   }
   .button:disabled {
-    cursor: not-allowed;
-    opacity: 0.43;
+    @apply cursor-not-allowed opacity-[0.43];
   }
   .inline-error {
-    background: #44291f;
-    color: #ffb7a0;
-    margin: -30px 0 0;
-    padding: 12px 14px;
+    @apply -mt-[30px] bg-error-surface px-3.5 py-3 text-error;
   }
   .topbar-actions {
-    align-items: center;
-    display: flex;
-    gap: 20px;
+    @apply flex items-center gap-5;
   }
   .workspace {
-    display: grid;
-    grid-template-columns: minmax(220px, 0.8fr) minmax(350px, 1.15fr) minmax(260px, 0.9fr);
-    min-height: calc(100dvh - 64px);
+    @apply grid min-h-[calc(100dvh-64px)] grid-cols-[minmax(220px,0.8fr)_minmax(350px,1.15fr)_minmax(260px,0.9fr)];
   }
   .workspace-panel {
-    border-right: 1px solid #41473f;
-    min-width: 0;
-    padding: 24px;
+    @apply min-w-0 border-r border-line p-6;
   }
   .workspace-panel:last-child {
-    border-right: 0;
+    @apply border-r-0;
   }
   .panel-heading {
-    align-items: center;
-    color: #eef1ea;
-    display: flex;
-    font-size: 0.86rem;
-    gap: 9px;
-    letter-spacing: -0.01em;
-    margin: 0 0 22px;
+    @apply mt-0 mb-[22px] flex items-center gap-[9px] text-[0.86rem] tracking-[-0.01em] text-ink;
   }
   .panel-heading svg {
-    color: #c4ff5b;
+    @apply text-accent;
   }
   .image-stage,
   .output-preview {
-    background: #0c0d0c;
-    display: grid;
-    min-height: 240px;
-    overflow: hidden;
-    place-items: center;
+    @apply grid min-h-60 place-items-center overflow-hidden bg-stage;
   }
   .image-stage img,
   .output-preview img {
-    height: 100%;
-    max-height: 420px;
-    object-fit: contain;
-    width: 100%;
+    @apply size-full max-h-[420px] object-contain;
   }
   .file-details {
-    border-bottom: 1px solid #41473f;
-    display: grid;
-    gap: 4px;
-    padding: 16px 0;
+    @apply grid gap-1 border-b border-line py-4;
   }
   .file-details strong {
-    font-size: 0.87rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @apply overflow-hidden text-[0.87rem] text-ellipsis whitespace-nowrap;
   }
   .file-details span,
   .output-copy p,
   .recipe-step p {
-    color: #abb1a8;
-    font-size: 0.78rem;
-    line-height: 1.45;
+    @apply text-[0.78rem] leading-[1.45] text-muted;
   }
   .secondary-dropzone {
-    color: #c4ff5b;
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: 650;
-    margin-top: 18px;
+    @apply mt-[18px] inline-block text-[0.8rem] font-[650] text-accent;
   }
   .search-field {
-    align-items: center;
-    border-bottom: 1px solid #697167;
-    color: #abb1a8;
-    display: flex;
-    gap: 9px;
-    padding: 0 0 9px;
+    @apply flex items-center gap-[9px] border-b border-line-strong pb-[9px] text-muted;
   }
   .search-field input {
-    background: transparent;
-    border: 0;
-    color: #eef1ea;
-    min-width: 0;
-    outline: 0;
-    width: 100%;
+    @apply min-w-0 w-full border-0 bg-transparent text-ink outline-0;
   }
   .search-field input::placeholder {
-    color: #899087;
+    @apply text-placeholder;
   }
   .operation-catalogue {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    margin-top: 18px;
+    @apply mt-[18px] grid grid-cols-2 gap-px;
   }
   .operation-option {
-    align-items: center;
-    background: #222521;
-    border: 0;
-    color: #eef1ea;
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
-    min-height: 68px;
-    padding: 11px;
-    text-align: left;
+    @apply flex min-h-[68px] items-center justify-between gap-2.5 border-0 bg-surface-raised p-[11px] text-left text-ink;
   }
   .operation-option:hover {
-    background: #2b302a;
+    @apply bg-surface-active;
   }
   .operation-option strong,
   .operation-option small {
-    display: block;
+    @apply block;
   }
   .operation-option strong {
-    font-size: 0.8rem;
+    @apply text-[0.8rem];
   }
   .operation-option small {
-    color: #abb1a8;
-    font-size: 0.66rem;
-    margin-top: 3px;
+    @apply mt-[3px] text-[0.66rem] text-muted;
   }
   .operation-option svg {
-    color: #c4ff5b;
-    flex: 0 0 auto;
+    @apply shrink-0 text-accent;
   }
   .recipe-list {
-    margin-top: 28px;
+    @apply mt-7;
   }
   .section-label {
-    color: #abb1a8;
-    display: flex;
-    font-size: 0.7rem;
-    font-weight: 700;
-    justify-content: space-between;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    @apply flex justify-between text-[0.7rem] font-bold uppercase tracking-[0.08em] text-muted;
   }
   .empty-recipe {
-    color: #abb1a8;
-    font-size: 0.83rem;
-    line-height: 1.5;
-    margin: 14px 0 0;
+    @apply mt-3.5 mb-0 text-[0.83rem] leading-[1.5] text-muted;
   }
   .recipe-step {
-    border-bottom: 1px solid #41473f;
-    padding: 15px 0;
+    @apply border-b border-line py-[15px];
   }
   .recipe-step.is-disabled {
-    opacity: 0.5;
+    @apply opacity-50;
   }
   .step-topline {
-    align-items: center;
-    display: flex;
-    gap: 9px;
+    @apply flex items-center gap-[9px];
   }
   .step-topline strong {
-    font-size: 0.84rem;
+    @apply text-[0.84rem];
   }
   .toggle-button {
-    background: #c4ff5b;
-    border: 0;
-    color: #141614;
-    font-size: 0.62rem;
-    font-weight: 800;
-    min-width: 26px;
-    padding: 3px 4px;
+    @apply min-w-[26px] border-0 bg-accent px-1 py-[3px] text-[0.62rem] font-extrabold text-canvas;
   }
   .is-disabled .toggle-button {
-    background: #697167;
-    color: #eef1ea;
+    @apply bg-line-strong text-ink;
   }
   .step-actions {
-    display: flex;
-    gap: 2px;
-    margin-left: auto;
+    @apply ml-auto flex gap-0.5;
   }
   .step-actions button {
-    align-items: center;
-    background: transparent;
-    border: 0;
-    color: #abb1a8;
-    display: inline-flex;
-    padding: 4px;
+    @apply inline-flex items-center border-0 bg-transparent p-1 text-muted;
   }
   .step-actions button:hover:not(:disabled) {
-    color: #c4ff5b;
+    @apply text-accent;
   }
   .step-actions button:disabled {
-    opacity: 0.25;
+    @apply opacity-25;
   }
   .recipe-step p {
-    margin: 8px 0 12px 35px;
+    @apply mt-2 mr-0 mb-3 ml-[35px];
   }
   .parameter-grid {
-    display: grid;
-    gap: 8px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-left: 35px;
+    @apply ml-[35px] grid grid-cols-2 gap-2;
   }
   .parameter-grid label {
-    color: #abb1a8;
-    display: grid;
-    font-size: 0.66rem;
-    gap: 4px;
-    text-transform: capitalize;
+    @apply grid gap-1 text-[0.66rem] capitalize text-muted;
   }
   .parameter-grid input:not([type="checkbox"]) {
-    background: #222521;
-    border: 1px solid #4b5049;
-    color: #eef1ea;
-    font-size: 0.76rem;
-    min-width: 0;
-    padding: 6px;
+    @apply min-w-0 border border-line-subtle bg-surface-raised p-1.5 text-[0.76rem] text-ink;
   }
   .parameter-grid input[type="checkbox"] {
-    accent-color: #c4ff5b;
-    height: 16px;
-    margin: 2px 0;
-    width: 16px;
+    @apply my-0.5 size-4 accent-accent;
   }
   .output-panel {
-    display: flex;
-    flex-direction: column;
+    @apply flex flex-col;
   }
   .output-preview {
-    min-height: 0;
-    position: relative;
+    @apply relative min-h-0;
   }
   .output-preview img {
-    filter: grayscale(0.25);
-    opacity: 0.5;
+    @apply grayscale-[0.25] opacity-50;
   }
   .preview-scrim {
-    align-items: center;
-    background: #141614b8;
-    color: #eef1ea;
-    display: flex;
-    font-size: 0.75rem;
-    font-weight: 650;
-    inset: 0;
-    justify-content: center;
-    position: absolute;
+    @apply absolute inset-0 flex items-center justify-center bg-scrim text-[0.75rem] font-[650] text-ink;
   }
   .preview-scrim span {
-    border: 1px solid #697167;
-    padding: 8px 10px;
+    @apply border border-line-strong px-2.5 py-2;
   }
   .output-copy {
-    margin-top: 20px;
+    @apply mt-5;
   }
   .output-copy strong {
-    font-size: 0.9rem;
+    @apply text-[0.9rem];
   }
   .output-copy p {
-    margin: 7px 0 0;
+    @apply mt-[7px] mb-0;
   }
   .button-wide {
-    margin-top: auto;
-    width: 100%;
+    @apply mt-auto w-full;
   }
   .mobile-tabs {
-    display: none;
+    @apply hidden;
   }
 
   @media (max-width: 850px) {
     .topbar {
-      padding: 0 18px;
+      @apply px-[18px];
     }
     .mobile-tabs {
-      border-bottom: 1px solid #41473f;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      @apply grid grid-cols-3 border-b border-line;
     }
     .mobile-tabs button {
-      background: transparent;
-      border: 0;
-      border-bottom: 2px solid transparent;
-      color: #abb1a8;
-      padding: 14px 10px 11px;
-      text-transform: capitalize;
+      @apply border-0 border-b-2 border-b-transparent bg-transparent px-2.5 pt-3.5 pb-[11px] capitalize text-muted;
     }
     .mobile-tabs button.active {
-      border-bottom-color: #c4ff5b;
-      color: #eef1ea;
+      @apply border-b-accent text-ink;
     }
     .workspace {
-      display: block;
-      min-height: calc(100dvh - 109px);
+      @apply block min-h-[calc(100dvh-109px)];
     }
     .workspace-panel {
-      border: 0;
-      display: none;
-      padding: 20px 18px;
+      @apply hidden border-0 px-[18px] py-5;
     }
     .workspace.active-input .input-panel,
     .workspace.active-recipe .recipe-panel,
     .workspace.active-output .output-panel {
-      display: flex;
+      @apply flex;
     }
     .workspace.active-recipe .recipe-panel {
-      display: block;
+      @apply block;
     }
     .image-stage {
-      min-height: min(62vh, 480px);
+      @apply min-h-[min(62vh,480px)];
     }
     .output-preview {
-      min-height: min(52vh, 400px);
+      @apply min-h-[min(52vh,400px)];
     }
   }
 
   @media (max-width: 520px) {
     .status-note {
-      display: none;
+      @apply hidden;
     }
     .welcome-content {
-      gap: 38px;
-      padding-left: 20px;
-      padding-right: 20px;
+      @apply gap-[38px] px-5;
     }
     .topbar {
-      padding: 0 16px;
+      @apply px-4;
     }
     .topbar-actions {
-      gap: 8px;
+      @apply gap-2;
     }
-    .operation-catalogue {
-      grid-template-columns: 1fr;
-    }
+    .operation-catalogue,
     .parameter-grid {
-      grid-template-columns: 1fr;
+      @apply grid-cols-1;
     }
   }
 }
