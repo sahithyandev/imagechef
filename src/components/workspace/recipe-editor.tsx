@@ -1,8 +1,8 @@
 import { SlidersHorizontal } from "lucide-react";
 
-import { PanelHeading } from "@/components/workspace/PanelHeading";
-import { RecipeStepCard } from "@/components/workspace/RecipeStepCard";
-import type { OperationParameter, RecipeStep } from "@/lib/imageRecipe";
+import { PanelHeading } from "@/components/workspace/panel-heading";
+import { RecipeStepCard } from "@/components/workspace/recipe-step-card";
+import type { OperationParameter, RecipeStep } from "@/lib/image-recipe";
 
 export function RecipeEditor({
   onMoveStep,

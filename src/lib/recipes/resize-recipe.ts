@@ -3,7 +3,7 @@ import {
   Recipe,
   type RecipeDefinition,
   type RecipeImage,
-} from "@/lib/recipes/Recipe";
+} from "@/lib/recipes/recipe";
 
 export type ResizeFit = "contain" | "cover" | "fill";
 

@@ -1,4 +1,4 @@
-import type { ImageAsset } from "@/lib/imageRecipe";
+import type { ImageAsset } from "@/lib/image-recipe";
 
 export function SampleImageDisplay({
   sample,

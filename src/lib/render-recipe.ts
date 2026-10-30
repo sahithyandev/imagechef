@@ -1,4 +1,4 @@
-import type { RecipeStep } from "@/lib/imageRecipe";
+import type { RecipeStep } from "@/lib/image-recipe";
 import type { RecipeImage } from "@/lib/recipes";
 import { createRecipe, type ResizeRecipe } from "@/lib/recipes";
 

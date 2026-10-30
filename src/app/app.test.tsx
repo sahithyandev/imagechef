@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { cn } from "@/lib/cn";
-import { addRecipeStep, moveRecipeStep } from "@/lib/imageRecipe";
+import { addRecipeStep, moveRecipeStep } from "@/lib/image-recipe";
 import { getResizeLayout, Recipe, ResizeRecipe } from "@/lib/recipes";
 
 test("merges Tailwind utility classes", () => {

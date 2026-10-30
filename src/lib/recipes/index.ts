@@ -1,5 +1,5 @@
-import type { RecipeStep } from "@/lib/imageRecipe";
-import { ResizeRecipe } from "@/lib/recipes/ResizeRecipe";
+import type { RecipeStep } from "@/lib/image-recipe";
+import { ResizeRecipe } from "@/lib/recipes/resize-recipe";
 
 export type {
   CanvasFactory,
@@ -7,10 +7,10 @@ export type {
   RecipeDefinition,
   RecipeImage,
   RecipeParameter,
-} from "@/lib/recipes/Recipe";
-export { Recipe } from "@/lib/recipes/Recipe";
-export type { ResizeFit, ResizeLayout, ResizeParameters } from "@/lib/recipes/ResizeRecipe";
-export { getResizeLayout, ResizeRecipe } from "@/lib/recipes/ResizeRecipe";
+} from "@/lib/recipes/recipe";
+export { Recipe } from "@/lib/recipes/recipe";
+export type { ResizeFit, ResizeLayout, ResizeParameters } from "@/lib/recipes/resize-recipe";
+export { getResizeLayout, ResizeRecipe } from "@/lib/recipes/resize-recipe";
 
 const recipeTypes = [ResizeRecipe];
 

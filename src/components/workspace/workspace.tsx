@@ -1,9 +1,9 @@
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 
-import { Brand } from "@/components/Brand";
-import { OperationLibrary } from "@/components/workspace/OperationLibrary";
-import { RecipeEditor } from "@/components/workspace/RecipeEditor";
-import { WorkspacePreview } from "@/components/workspace/WorkspacePreview";
+import { Brand } from "@/components/brand";
+import { OperationLibrary } from "@/components/workspace/operation-library";
+import { RecipeEditor } from "@/components/workspace/recipe-editor";
+import { WorkspacePreview } from "@/components/workspace/workspace-preview";
 import {
   type ImageAsset,
   moveRecipeStep,
@@ -11,7 +11,7 @@ import {
   type OperationParameter,
   operationCatalogue,
   type RecipeStep,
-} from "@/lib/imageRecipe";
+} from "@/lib/image-recipe";
 
 export type WorkspacePanel = "library" | "recipe" | "preview";
 

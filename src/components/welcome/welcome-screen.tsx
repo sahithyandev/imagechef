@@ -3,9 +3,9 @@ import { ImageUp } from "lucide-react";
 import modernAbstractImage from "@/assets/photo-abstract-painting.jpg";
 import alpineLakeImage from "@/assets/photo-alpine-lake.jpg";
 import rainLeavesImage from "@/assets/photo-rain-leaves.jpg";
-import { Brand } from "@/components/Brand";
-import { SampleImageDisplay } from "@/components/welcome/SampleImageDisplay";
-import type { ImageAsset } from "@/lib/imageRecipe";
+import { Brand } from "@/components/brand";
+import { SampleImageDisplay } from "@/components/welcome/sample-image-display";
+import type { ImageAsset } from "@/lib/image-recipe";
 
 const sampleAssets: Array<
   ImageAsset & { alt: string; creditName: string; creditUrl: string; label: string; name: string }

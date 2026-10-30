@@ -2,6 +2,10 @@
 
 ## Code conventions
 
+### File names
+
+- Name every file and directory under `src/` in kebab-case. Preserve conventional dotted suffixes such as `.test.tsx` and `.d.ts`.
+
 ### Styling
 
 - Use Tailwind utility classes directly in the component that owns the UI.
