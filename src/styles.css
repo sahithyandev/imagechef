@@ -49,8 +49,7 @@
   }
 
   button:focus-visible,
-  input:focus-visible,
-  label:has(input:focus-visible) {
+  input:focus-visible {
     @apply outline-2 outline-offset-3 outline-accent;
   }
 
