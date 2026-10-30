@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { cn } from "@/lib/cn";
 import { addRecipeStep, moveRecipeStep } from "@/lib/image-recipe";
+import { round } from "@/lib/math";
 import {
   getResizeDefaultParameters,
   getResizeLayout,
@@ -11,6 +12,13 @@ import {
 
 test("merges Tailwind utility classes", () => {
   expect(cn("px-2", "px-4")).toBe("px-4");
+});
+
+test("rounds values to a requested decimal precision", () => {
+  expect(round(12.5)).toBe(13);
+  expect(round(1.005, 2)).toBe(1.01);
+  expect(round(-1.005, 2)).toBe(-1.01);
+  expect(round(1_234, -2)).toBe(1_200);
 });
 
 test("adds editable operation defaults to a recipe", () => {
