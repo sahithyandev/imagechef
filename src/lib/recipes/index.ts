@@ -14,6 +14,7 @@ export {
   getResizeDefaultParameters,
   getResizeLayout,
   ResizeRecipe,
+  resizeWithUpdatedDimension,
 } from "@/lib/recipes/resize-recipe";
 
 const recipeTypes = [ResizeRecipe];

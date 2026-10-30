@@ -8,6 +8,7 @@ import {
 export type ResizeFit = "contain" | "cover" | "fill";
 
 export type ResizeParameters = {
+  aspectRatioLocked: boolean;
   width: number;
   height: number;
   fit: ResizeFit;
@@ -20,7 +21,12 @@ export type ResizeLayout = {
   destinationY: number;
 };
 
-const fallbackParameters: ResizeParameters = { width: 1600, height: 900, fit: "contain" };
+const fallbackParameters: ResizeParameters = {
+  aspectRatioLocked: true,
+  width: 1600,
+  height: 900,
+  fit: "contain",
+};
 
 const isResizeFit = (value: unknown): value is ResizeFit =>
   value === "contain" || value === "cover" || value === "fill";
@@ -31,6 +37,10 @@ const positiveInteger = (value: unknown, fallback: number) =>
 export const normalizeResizeParameters = (
   parameters: Record<string, string | number | boolean>,
 ): ResizeParameters => ({
+  aspectRatioLocked:
+    typeof parameters.aspectRatioLocked === "boolean"
+      ? parameters.aspectRatioLocked
+      : fallbackParameters.aspectRatioLocked,
   width: positiveInteger(parameters.width, fallbackParameters.width),
   height: positiveInteger(parameters.height, fallbackParameters.height),
   fit: isResizeFit(parameters.fit) ? parameters.fit : fallbackParameters.fit,
@@ -40,10 +50,38 @@ export const getResizeDefaultParameters = ({
   height,
   width,
 }: Pick<RecipeImage, "height" | "width">): ResizeParameters => ({
+  aspectRatioLocked: true,
   width: positiveInteger(width, fallbackParameters.width),
   height: positiveInteger(height, fallbackParameters.height),
   fit: fallbackParameters.fit,
 });
+
+export const resizeWithUpdatedDimension = (
+  parameters: Record<string, string | number | boolean>,
+  dimension: "width" | "height",
+  value: number,
+): ResizeParameters => {
+  const current = normalizeResizeParameters(parameters);
+  const nextValue = positiveInteger(value, current[dimension]);
+
+  if (!current.aspectRatioLocked) {
+    return { ...current, [dimension]: nextValue };
+  }
+
+  if (dimension === "width") {
+    return {
+      ...current,
+      width: nextValue,
+      height: Math.max(1, Math.round(nextValue * (current.height / current.width))),
+    };
+  }
+
+  return {
+    ...current,
+    height: nextValue,
+    width: Math.max(1, Math.round(nextValue * (current.width / current.height))),
+  };
+};
 
 export const getResizeLayout = (
   sourceWidth: number,

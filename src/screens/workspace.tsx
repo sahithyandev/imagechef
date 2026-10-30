@@ -12,6 +12,7 @@ import {
   operationCatalogue,
   type RecipeStep,
 } from "@/lib/image-recipe";
+import { resizeWithUpdatedDimension } from "@/lib/recipes";
 
 export type WorkspacePanel = "library" | "recipe" | "preview";
 
@@ -69,7 +70,14 @@ export function Workspace({
   const updateParameter = (stepId: string, key: string, value: OperationParameter) => {
     onSetRecipe((currentRecipe) =>
       currentRecipe.map((step) =>
-        step.id === stepId ? { ...step, parameters: { ...step.parameters, [key]: value } } : step,
+        step.id !== stepId
+          ? step
+          : step.operationId === "resize" && (key === "width" || key === "height")
+            ? {
+                ...step,
+                parameters: resizeWithUpdatedDimension(step.parameters, key, Number(value)),
+              }
+            : { ...step, parameters: { ...step.parameters, [key]: value } },
       ),
     );
   };
