@@ -7,21 +7,32 @@ import { type RenderedRecipe, renderRecipe } from "@/lib/render-recipe";
 
 const formatFileSize = (bytes: number) => {
   if (bytes <= 0) return "N/A";
-  
+
   const units = ["B", "KB", "MB", "GB"];
   const unitIndex = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
   const value = bytes / 1024 ** unitIndex;
   return `${new Intl.NumberFormat(undefined, { maximumFractionDigits: value < 10 ? 1 : 0 }).format(value)} ${units[unitIndex]}`;
 };
 
-const formatImageType = (type: string) => {
+const formatImageType = (type: string | undefined) => {
+  if (!type) return "N/A";
   const format = type.replace("image/", "").toUpperCase();
-
   return format === "JPG" ? "JPEG" : format || "Unknown";
 };
 
+const getDataUrlMetadata = (dataUrl: string): { size: number; type: string } => {
+  const match = dataUrl.match(/^data:([^;,]+);base64,(.*)$/);
+
+  if (!match) return { size: 0, type: "" };
+
+  const type = match[1] ?? "";
+  const encodedData = match[2] ?? "";
+  const padding = encodedData.endsWith("==") ? 2 : encodedData.endsWith("=") ? 1 : 0;
+
+  return { size: (encodedData.length * 3) / 4 - padding, type };
+};
+
 export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe: RecipeStep[] }) {
-  const activeSteps = recipe.filter((step) => step.enabled).length;
   const [output, setOutput] = useState<RenderedRecipe | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState<{
@@ -29,6 +40,7 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
     previewUrl: string;
     width: number;
   } | null>(null);
+  const outputMetadata = output ? getDataUrlMetadata(output.dataUrl) : null;
 
   useEffect(() => {
     let isCurrent = true;
@@ -53,7 +65,7 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
     <section className="workspace-panel preview-panel" aria-label="Input and output previews">
       <section className="preview-section" aria-labelledby="input-title">
         <PanelHeading icon={<FileImage size={17} />} title="Input" id="input-title" />
-        <div className="image-stage">
+        <div className="image-stage [@media(min-width:851px)]:min-h-40">
           <img
             alt={`Preview of ${asset.name}`}
             src={asset.previewUrl}
@@ -103,13 +115,24 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
             </div>
           ) : null}
         </div>
-        <div className="output-copy">
-          <strong>{output ? `${output.width} × ${output.height} px` : "Output preview"}</strong>
-          <p>
-            {output
-              ? `${activeSteps} active recipe step${activeSteps === 1 ? "" : "s"} applied.`
-              : "Add an enabled resize step to render an output."}
-          </p>
+        <div className="output-copy grid gap-3 py-4">
+          {output && outputMetadata ? (
+            <dl className="grid grid-cols-3 gap-x-3 text-[0.75rem] leading-[1.35]">
+              <div className="grid gap-0.5">
+                <dt className="text-muted">Dimensions</dt>
+                <dd className="text-ink">{`${output.width} × ${output.height} px`}</dd>
+              </div>
+              <div className="grid gap-0.5">
+                <dt className="text-muted">Format</dt>
+                <dd className="text-ink">{formatImageType(outputMetadata.type)}</dd>
+              </div>
+              <div className="grid gap-0.5">
+                <dt className="text-muted">File size</dt>
+                <dd className="text-ink">{formatFileSize(outputMetadata.size)}</dd>
+              </div>
+            </dl>
+          ) : null}
+          {output ? null : <p className="mt-0">Add an enabled resize step to render an output.</p>}
         </div>
         <button className="button button-secondary button-wide" disabled type="button">
           Export output
