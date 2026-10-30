@@ -1,7 +1,7 @@
 import { renderToString } from "react-dom/server";
 
-import { App } from "@/app/app";
-import { AppProviders } from "@/app/app-providers";
+import { App } from "@/app";
+import { AppProviders } from "@/app-providers";
 
 export function render() {
   return renderToString(

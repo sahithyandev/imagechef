@@ -8,7 +8,7 @@ import {
 export type ResizeFit = "contain" | "cover" | "fill";
 
 export type ResizeParameters = {
-  aspectRatioLocked: boolean;
+  aspectRatioLocked?: boolean;
   width: number;
   height: number;
   fit: ResizeFit;

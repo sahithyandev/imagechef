@@ -1,4 +1,4 @@
-import { ArrowBigDown, ArrowDown, ArrowUp, FileImage, ImageUp } from "lucide-react";
+import { ArrowDown, ArrowUp, FileImage, ImageUp } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { PanelHeading } from "@/components/panel-heading";

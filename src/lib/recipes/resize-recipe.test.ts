@@ -38,7 +38,7 @@ test("leaves the paired resize dimension unchanged while the aspect ratio is unl
 
 test("resize recipe is a Recipe implementation and preserves aspect ratio with contain", () => {
   const recipe = new ResizeRecipe({ width: 400, height: 400, fit: "contain" });
-  const layout = getResizeLayout(800, 400, { width: 400, height: 400, fit: "contain" });
+  const layout = getResizeLayout(800, 400, { aspectRatioLocked: false, width: 400, height: 400, fit: "contain" });
 
   expect(recipe).toBeInstanceOf(Recipe);
   expect(recipe.definition.id).toBe("resize");
