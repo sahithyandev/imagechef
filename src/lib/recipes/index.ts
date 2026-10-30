@@ -13,6 +13,7 @@ export type { ResizeFit, ResizeLayout, ResizeParameters } from "@/lib/recipes/re
 export {
   getResizeDefaultParameters,
   getResizeLayout,
+  normalizeResizeParameters,
   ResizeRecipe,
   resizeWithUpdatedDimension,
 } from "@/lib/recipes/resize-recipe";

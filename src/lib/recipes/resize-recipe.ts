@@ -4,15 +4,7 @@ import {
   type RecipeDefinition,
   type RecipeImage,
 } from "@/lib/recipes/recipe";
-
-export type ResizeFit = "contain" | "cover" | "fill";
-
-export type ResizeParameters = {
-  aspectRatioLocked?: boolean;
-  width: number;
-  height: number;
-  fit: ResizeFit;
-};
+import { z } from "zod";
 
 export type ResizeLayout = {
   destinationHeight: number;
@@ -21,48 +13,49 @@ export type ResizeLayout = {
   destinationY: number;
 };
 
-const fallbackParameters: ResizeParameters = {
+export const resizeParameterDefaults = {
   aspectRatioLocked: true,
   width: 1600,
   height: 900,
   fit: "contain",
-};
+} as const;
 
-const isResizeFit = (value: unknown): value is ResizeFit =>
-  value === "contain" || value === "cover" || value === "fill";
+const resizeDimensionSchema = z.number().finite().positive().transform(Math.round);
 
-const positiveInteger = (value: unknown, fallback: number) =>
-  typeof value === "number" && Number.isFinite(value) && value > 0 ? Math.round(value) : fallback;
+export const resizeParametersSchema = z
+  .object({
+    aspectRatioLocked: z.boolean().default(resizeParameterDefaults.aspectRatioLocked).catch(true),
+    width: resizeDimensionSchema.default(resizeParameterDefaults.width).catch(resizeParameterDefaults.width),
+    height: resizeDimensionSchema.default(resizeParameterDefaults.height).catch(resizeParameterDefaults.height),
+    fit: z.enum(["contain", "cover", "fill"]).default(resizeParameterDefaults.fit).catch("contain"),
+  })
+  .catch(resizeParameterDefaults);
+
+export type ResizeParameters = z.output<typeof resizeParametersSchema>;
+export type ResizeFit = ResizeParameters["fit"];
 
 export const normalizeResizeParameters = (
-  parameters: Record<string, string | number | boolean>,
-): ResizeParameters => ({
-  aspectRatioLocked:
-    typeof parameters.aspectRatioLocked === "boolean"
-      ? parameters.aspectRatioLocked
-      : fallbackParameters.aspectRatioLocked,
-  width: positiveInteger(parameters.width, fallbackParameters.width),
-  height: positiveInteger(parameters.height, fallbackParameters.height),
-  fit: isResizeFit(parameters.fit) ? parameters.fit : fallbackParameters.fit,
-});
+  parameters: unknown,
+): ResizeParameters => resizeParametersSchema.parse(parameters);
 
 export const getResizeDefaultParameters = ({
   height,
   width,
 }: Pick<RecipeImage, "height" | "width">): ResizeParameters => ({
   aspectRatioLocked: true,
-  width: positiveInteger(width, fallbackParameters.width),
-  height: positiveInteger(height, fallbackParameters.height),
-  fit: fallbackParameters.fit,
+  width: resizeDimensionSchema.catch(resizeParameterDefaults.width).parse(width),
+  height: resizeDimensionSchema.catch(resizeParameterDefaults.height).parse(height),
+  fit: resizeParameterDefaults.fit,
 });
 
 export const resizeWithUpdatedDimension = (
-  parameters: Record<string, string | number | boolean>,
+  parameters: unknown,
   dimension: "width" | "height",
   value: number,
 ): ResizeParameters => {
   const current = normalizeResizeParameters(parameters);
-  const nextValue = positiveInteger(value, current[dimension]);
+  const parsedValue = resizeDimensionSchema.safeParse(value);
+  const nextValue = parsedValue.success ? parsedValue.data : current[dimension];
 
   if (!current.aspectRatioLocked) {
     return { ...current, [dimension]: nextValue };
@@ -113,10 +106,10 @@ export class ResizeRecipe extends Recipe<ResizeParameters> {
     name: "Resize",
     description: "Set the output dimensions without changing the source file.",
     category: "Geometry",
-    defaults: fallbackParameters,
+    defaults: resizeParameterDefaults,
   };
 
-  constructor(parameters: Record<string, string | number | boolean> = fallbackParameters) {
+  constructor(parameters: unknown = resizeParameterDefaults) {
     super(normalizeResizeParameters(parameters));
   }
 

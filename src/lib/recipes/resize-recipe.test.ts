@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import {
   getResizeDefaultParameters,
   getResizeLayout,
+  normalizeResizeParameters,
   Recipe,
   ResizeRecipe,
   resizeWithUpdatedDimension,
@@ -14,6 +15,12 @@ test("creates resize defaults from the original image dimensions", () => {
     height: 4032,
     fit: "contain",
   });
+});
+
+test("normalizes invalid and missing resize parameters with schema defaults", () => {
+  expect(
+    normalizeResizeParameters({ aspectRatioLocked: "yes", width: -10, height: undefined, fit: "stretch" }),
+  ).toEqual({ aspectRatioLocked: true, width: 1600, height: 900, fit: "contain" });
 });
 
 test("updates the paired resize dimension while the aspect ratio is locked", () => {

@@ -1,15 +1,50 @@
 import { useEffect, useState } from "react";
+import { z } from "zod";
 import {
   addRecipeStep,
   type ImageAsset,
   type OperationDefinition,
   type RecipeStep,
 } from "@/lib/image-recipe";
+import { resizeParametersSchema } from "@/lib/recipes/resize-recipe";
 import { WelcomeScreen } from "@/screens/welcome";
 import { Workspace, type WorkspacePanel } from "@/screens/workspace";
 
 const supportedImageTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const workspaceDraftStorageKey = "image-chef.workspace-draft";
+
+const workspacePanelSchema = z.enum(["library", "recipe", "preview"]);
+const imageAssetSchema = z.object({
+  height: z.number().finite().positive().optional(),
+  isSample: z.boolean().optional(),
+  name: z.string(),
+  size: z.number().finite().nonnegative(),
+  type: z.string(),
+  previewUrl: z.string(),
+  width: z.number().finite().positive().optional(),
+});
+const recipeParameterSchema = z.union([z.string(), z.number(), z.boolean()]);
+const recipeStepBaseSchema = z.object({
+  id: z.string().min(1),
+  enabled: z.boolean().default(true),
+});
+const recipeStepSchema = z.union([
+  recipeStepBaseSchema.extend({
+    operationId: z.literal("resize"),
+    parameters: resizeParametersSchema,
+  }),
+  recipeStepBaseSchema.extend({
+    operationId: z.enum(["crop", "rotate", "convert", "quality", "strip-metadata"]),
+    parameters: z.record(z.string(), recipeParameterSchema).default({}),
+  }),
+]);
+const workspaceDraftSchema = z.object({
+  activePanel: workspacePanelSchema.default("recipe"),
+  asset: imageAssetSchema.nullable().default(null),
+  collapsedCategories: z.record(z.string(), z.boolean()).default({}),
+  query: z.string().default(""),
+  recipe: z.array(recipeStepSchema).default([]),
+});
 
 type WorkspaceDraft = {
   activePanel: WorkspacePanel;
@@ -27,44 +62,12 @@ const readWorkspaceDraft = (): WorkspaceDraft | null => {
 
     if (!serializedDraft) return null;
 
-    const draft: unknown = JSON.parse(serializedDraft);
+    const result = workspaceDraftSchema.safeParse(JSON.parse(serializedDraft));
 
-    if (!isWorkspaceDraft(draft)) return null;
-
-    return draft;
+    return result.success ? result.data : null;
   } catch {
     return null;
   }
-};
-
-const isWorkspaceDraft = (value: unknown): value is WorkspaceDraft => {
-  if (!value || typeof value !== "object") return false;
-
-  const draft = value as Partial<WorkspaceDraft>;
-
-  return (
-    (draft.activePanel === "library" ||
-      draft.activePanel === "recipe" ||
-      draft.activePanel === "preview") &&
-    (draft.asset === null || isImageAsset(draft.asset)) &&
-    typeof draft.collapsedCategories === "object" &&
-    draft.collapsedCategories !== null &&
-    typeof draft.query === "string" &&
-    Array.isArray(draft.recipe)
-  );
-};
-
-const isImageAsset = (value: unknown): value is ImageAsset => {
-  if (!value || typeof value !== "object") return false;
-
-  const asset = value as Partial<ImageAsset>;
-
-  return (
-    typeof asset.name === "string" &&
-    typeof asset.size === "number" &&
-    typeof asset.type === "string" &&
-    typeof asset.previewUrl === "string"
-  );
 };
 
 const readFileAsDataUrl = (file: File) =>
