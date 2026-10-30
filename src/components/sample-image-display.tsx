@@ -21,13 +21,9 @@ export function SampleImageDisplay({
         type="button"
         onClick={() => onSelect(sample)}
       >
-        <img
-          alt={sample.alt}
-          className="aspect-[3/2] w-full object-cover"
-          src={sample.previewUrl}
-        />
+        <img alt={sample.alt} className="aspect-3/2 w-full object-cover" src={sample.previewUrl} />
         <span className="grid gap-0.5 p-3">
-          <small className="text-[0.5rem] font-bold uppercase tracking-[0.1em] text-accent">
+          <small className="text-[0.5rem] font-bold uppercase tracking-widest text-accent">
             {sample.label}
           </small>
           <strong className="text-[0.84rem] text-ink">{sample.name}</strong>

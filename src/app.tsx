@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { WelcomeScreen } from "@/components/welcome/welcome-screen";
-import { Workspace, type WorkspacePanel } from "@/components/workspace/workspace";
+import { WelcomeScreen } from "@/screens/welcome";
+import { Workspace, type WorkspacePanel } from "@/screens/workspace";
 import {
   addRecipeStep,
   type ImageAsset,

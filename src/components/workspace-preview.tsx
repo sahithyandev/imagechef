@@ -1,7 +1,7 @@
 import { FileImage, ImageUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { PanelHeading } from "@/components/workspace/panel-heading";
+import { PanelHeading } from "@/components/panel-heading";
 import type { ImageAsset, RecipeStep } from "@/lib/image-recipe";
 import { type RenderedRecipe, renderRecipe } from "@/lib/render-recipe";
 

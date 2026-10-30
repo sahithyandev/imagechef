@@ -1,9 +1,9 @@
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 
 import { Brand } from "@/components/brand";
-import { OperationLibrary } from "@/components/workspace/operation-library";
-import { RecipeEditor } from "@/components/workspace/recipe-editor";
-import { WorkspacePreview } from "@/components/workspace/workspace-preview";
+import { OperationLibrary } from "@/components/operation-library";
+import { RecipeEditor } from "@/components/recipe-editor";
+import { WorkspacePreview } from "@/components/workspace-preview";
 import {
   type ImageAsset,
   moveRecipeStep,
