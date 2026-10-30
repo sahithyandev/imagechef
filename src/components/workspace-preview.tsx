@@ -2,10 +2,10 @@ import { ArrowDown, ArrowUp, FileImage, ImageUp } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { PanelHeading } from "@/components/panel-heading";
-import type { ImageAsset, RecipeStep } from "@/lib/image-recipe";
-import { type RenderedRecipe, renderRecipe } from "@/lib/render-recipe";
-import { round } from "@/lib/math";
 import { cn } from "@/lib/cn";
+import type { ImageAsset, RecipeStep } from "@/lib/image-recipe";
+import { round } from "@/lib/math";
+import { type RenderedRecipe, renderRecipe } from "@/lib/render-recipe";
 
 const formatFileSize = (bytes: number) => {
   if (bytes <= 0) return "N/A";
@@ -95,7 +95,9 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
             <div className="grid gap-0.5">
               <dt className="text-muted">Dimensions</dt>
               <dd className="text-ink">
-                {dimensions?.previewUrl === asset.previewUrl ? `${dimensions.width} × ${dimensions.height} px` : "Loading…"}
+                {dimensions?.previewUrl === asset.previewUrl
+                  ? `${dimensions.width} × ${dimensions.height} px`
+                  : "Loading…"}
               </dd>
             </div>
             <div className="grid gap-0.5">
@@ -137,7 +139,11 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
                   {compressionRatioPercentage ? (
                     <>
                       (
-                      <span className={cn(compressionRatioPercentage < 100 ? "text-green-400" : "text-red-500")}>
+                      <span
+                        className={cn(
+                          compressionRatioPercentage < 100 ? "text-green-400" : "text-red-500",
+                        )}
+                      >
                         {compressionRatioPercentage < 100 ? (
                           <ArrowDown className="inline-block size-4 pr-0.5" />
                         ) : (

@@ -12,7 +12,7 @@
     "test": "bun test",
     "typecheck": "bun check",
     "lint": "biome check .",
-    "format": "biome format --write ."
+    "format": "biome check --write ."
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.3",
