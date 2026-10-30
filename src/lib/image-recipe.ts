@@ -1,7 +1,7 @@
 export type OperationId = "resize" | "crop" | "rotate" | "convert" | "quality" | "strip-metadata";
 
 import type { RecipeCategory, RecipeDefinition, RecipeParameter } from "@/lib/recipes";
-import { recipeCatalogue } from "@/lib/recipes";
+import { getResizeDefaultParameters, recipeCatalogue } from "@/lib/recipes";
 
 export type OperationParameter = RecipeParameter;
 
@@ -50,7 +50,7 @@ export const addRecipeStep = (
   const operation = getOperation(operationId);
   const parameters =
     operationId === "resize" && imageDimensions
-      ? { ...operation.defaults, width: imageDimensions.width, height: imageDimensions.height }
+      ? getResizeDefaultParameters(imageDimensions)
       : operation.defaults;
 
   return [

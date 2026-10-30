@@ -10,7 +10,11 @@ export type {
 } from "@/lib/recipes/recipe";
 export { Recipe } from "@/lib/recipes/recipe";
 export type { ResizeFit, ResizeLayout, ResizeParameters } from "@/lib/recipes/resize-recipe";
-export { getResizeLayout, ResizeRecipe } from "@/lib/recipes/resize-recipe";
+export {
+  getResizeDefaultParameters,
+  getResizeLayout,
+  ResizeRecipe,
+} from "@/lib/recipes/resize-recipe";
 
 const recipeTypes = [ResizeRecipe];
 

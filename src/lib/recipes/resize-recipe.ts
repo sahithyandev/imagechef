@@ -20,7 +20,7 @@ export type ResizeLayout = {
   destinationY: number;
 };
 
-const defaultParameters: ResizeParameters = { width: 1600, height: 900, fit: "contain" };
+const fallbackParameters: ResizeParameters = { width: 1600, height: 900, fit: "contain" };
 
 const isResizeFit = (value: unknown): value is ResizeFit =>
   value === "contain" || value === "cover" || value === "fill";
@@ -31,9 +31,18 @@ const positiveInteger = (value: unknown, fallback: number) =>
 export const normalizeResizeParameters = (
   parameters: Record<string, string | number | boolean>,
 ): ResizeParameters => ({
-  width: positiveInteger(parameters.width, defaultParameters.width),
-  height: positiveInteger(parameters.height, defaultParameters.height),
-  fit: isResizeFit(parameters.fit) ? parameters.fit : defaultParameters.fit,
+  width: positiveInteger(parameters.width, fallbackParameters.width),
+  height: positiveInteger(parameters.height, fallbackParameters.height),
+  fit: isResizeFit(parameters.fit) ? parameters.fit : fallbackParameters.fit,
+});
+
+export const getResizeDefaultParameters = ({
+  height,
+  width,
+}: Pick<RecipeImage, "height" | "width">): ResizeParameters => ({
+  width: positiveInteger(width, fallbackParameters.width),
+  height: positiveInteger(height, fallbackParameters.height),
+  fit: fallbackParameters.fit,
 });
 
 export const getResizeLayout = (
@@ -66,10 +75,10 @@ export class ResizeRecipe extends Recipe<ResizeParameters> {
     name: "Resize",
     description: "Set the output dimensions without changing the source file.",
     category: "Geometry",
-    defaults: defaultParameters,
+    defaults: fallbackParameters,
   };
 
-  constructor(parameters: Record<string, string | number | boolean> = defaultParameters) {
+  constructor(parameters: Record<string, string | number | boolean> = fallbackParameters) {
     super(normalizeResizeParameters(parameters));
   }
 

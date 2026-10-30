@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { cn } from "@/lib/cn";
 import { addRecipeStep, moveRecipeStep } from "@/lib/image-recipe";
-import { getResizeLayout, Recipe, ResizeRecipe } from "@/lib/recipes";
+import { getResizeDefaultParameters, getResizeLayout, Recipe, ResizeRecipe } from "@/lib/recipes";
 
 test("merges Tailwind utility classes", () => {
   expect(cn("px-2", "px-4")).toBe("px-4");
@@ -18,6 +18,14 @@ test("uses the input image dimensions for a new resize operation", () => {
   const recipe = addRecipeStep([], "resize", { width: 3024, height: 4032 });
 
   expect(recipe[0]?.parameters).toEqual({ width: 3024, height: 4032, fit: "contain" });
+});
+
+test("creates resize defaults from the original image dimensions", () => {
+  expect(getResizeDefaultParameters({ width: 3024, height: 4032 })).toEqual({
+    width: 3024,
+    height: 4032,
+    fit: "contain",
+  });
 });
 
 test("moves an operation without mutating the existing recipe", () => {

@@ -170,20 +170,31 @@ export function App() {
     return <WelcomeScreen error={error} onStageFile={stageFile} onStageSample={stageSample} />;
   }
 
+  const addOperation = async (operationId: OperationDefinition["id"]) => {
+    let dimensions =
+      asset.width && asset.height ? { width: asset.width, height: asset.height } : undefined;
+
+    if (!dimensions) {
+      try {
+        dimensions = await getImageDimensions(asset.previewUrl);
+        setAsset((current) =>
+          current?.previewUrl === asset.previewUrl ? { ...current, ...dimensions } : current,
+        );
+      } catch {
+        setError("The image dimensions could not be read. Try another image.");
+        return;
+      }
+    }
+
+    setRecipe((current) => addRecipeStep(current, operationId, dimensions));
+  };
+
   return (
     <Workspace
       activePanel={activePanel}
       asset={asset}
       collapsedCategories={collapsedCategories}
-      onAddOperation={(operationId: OperationDefinition["id"]) =>
-        setRecipe((current) =>
-          addRecipeStep(
-            current,
-            operationId,
-            asset.width && asset.height ? { width: asset.width, height: asset.height } : undefined,
-          ),
-        )
-      }
+      onAddOperation={addOperation}
       onNewImage={() => setAsset(null)}
       onSetActivePanel={setActivePanel}
       onSetCollapsedCategories={setCollapsedCategories}
