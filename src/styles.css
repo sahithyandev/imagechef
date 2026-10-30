@@ -342,9 +342,6 @@
   .output-preview {
     @apply relative min-h-0;
   }
-  .output-preview img {
-    @apply grayscale-[0.25] opacity-50;
-  }
   .preview-scrim {
     @apply absolute inset-0 flex items-center justify-center bg-scrim text-[0.75rem] font-[650] text-ink;
   }

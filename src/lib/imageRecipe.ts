@@ -1,13 +1,13 @@
 export type OperationId = "resize" | "crop" | "rotate" | "convert" | "quality" | "strip-metadata";
 
-export type OperationParameter = string | number | boolean;
+import type { RecipeCategory, RecipeDefinition, RecipeParameter } from "@/lib/recipes";
+import { recipeCatalogue } from "@/lib/recipes";
 
-export interface OperationDefinition {
+export type OperationParameter = RecipeParameter;
+
+export interface OperationDefinition extends Omit<RecipeDefinition, "id" | "category"> {
   id: OperationId;
-  name: string;
-  description: string;
-  category: "Geometry" | "Format" | "Optimise";
-  defaults: Record<string, OperationParameter>;
+  category: RecipeCategory;
 }
 
 export interface RecipeStep {
@@ -25,50 +25,10 @@ export interface ImageAsset {
   previewUrl: string;
 }
 
-export const operationCatalogue: OperationDefinition[] = [
-  {
-    id: "resize",
-    name: "Resize",
-    description: "Set the output dimensions without changing the source file.",
-    category: "Geometry",
-    defaults: { width: 1600, height: 900, fit: "contain" },
-  },
-  {
-    id: "crop",
-    name: "Crop",
-    description: "Keep a defined region of the image.",
-    category: "Geometry",
-    defaults: { aspect: "Original", anchor: "Centre" },
-  },
-  {
-    id: "rotate",
-    name: "Rotate & flip",
-    description: "Correct orientation or mirror an image.",
-    category: "Geometry",
-    defaults: { degrees: 0, flipHorizontal: false },
-  },
-  {
-    id: "convert",
-    name: "Convert format",
-    description: "Choose the image format used for export.",
-    category: "Format",
-    defaults: { format: "WebP" },
-  },
-  {
-    id: "quality",
-    name: "Quality",
-    description: "Set a target encoding quality for lossy formats.",
-    category: "Optimise",
-    defaults: { quality: 82 },
-  },
-  {
-    id: "strip-metadata",
-    name: "Remove metadata",
-    description: "Exclude camera and location metadata from the output.",
-    category: "Optimise",
-    defaults: { preserveOrientation: true },
-  },
-];
+export const operationCatalogue: OperationDefinition[] = recipeCatalogue.map((recipe) => ({
+  ...recipe,
+  id: recipe.id as OperationId,
+}));
 
 export const getOperation = (id: OperationId) => {
   const operation = operationCatalogue.find((candidate) => candidate.id === id);

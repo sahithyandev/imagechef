@@ -1,10 +1,33 @@
 import { FileImage, ImageUp } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { PanelHeading } from "@/components/workspace/PanelHeading";
 import type { ImageAsset, RecipeStep } from "@/lib/imageRecipe";
+import { type RenderedRecipe, renderRecipe } from "@/lib/renderRecipe";
 
 export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe: RecipeStep[] }) {
   const activeSteps = recipe.filter((step) => step.enabled).length;
+  const [output, setOutput] = useState<RenderedRecipe | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    setOutput(null);
+    setError(null);
+
+    void renderRecipe(asset.previewUrl, recipe)
+      .then((result) => {
+        if (isCurrent) setOutput(result);
+      })
+      .catch(() => {
+        if (isCurrent) setError("The output preview could not be rendered.");
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [asset.previewUrl, recipe]);
 
   return (
     <section className="workspace-panel preview-panel" aria-label="Input and output previews">
@@ -20,17 +43,19 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
       <section className="preview-section output-section" aria-labelledby="output-title">
         <PanelHeading icon={<ImageUp size={17} />} title="Output" id="output-title" />
         <div className="output-preview">
-          <img alt="Source staged as a placeholder output" src={asset.previewUrl} />
-          <div className="preview-scrim">
-            <span>Preview unavailable</span>
-          </div>
+          {output ? <img alt="Recipe output preview" src={output.dataUrl} /> : null}
+          {!output ? (
+            <div className="preview-scrim">
+              <span>{error ?? "Add an enabled resize step to render a preview"}</span>
+            </div>
+          ) : null}
         </div>
         <div className="output-copy">
-          <strong>Processing is not connected yet.</strong>
+          <strong>{output ? `${output.width} × ${output.height} px` : "Output preview"}</strong>
           <p>
-            {recipe.length
-              ? `${activeSteps} active recipe step${activeSteps === 1 ? "" : "s"} staged for this output.`
-              : "Add operations to stage a transform recipe."}
+            {output
+              ? `${activeSteps} active recipe step${activeSteps === 1 ? "" : "s"} applied.`
+              : "Add an enabled resize step to render an output."}
           </p>
         </div>
         <button className="button button-secondary button-wide" disabled type="button">
