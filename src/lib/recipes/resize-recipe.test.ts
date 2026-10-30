@@ -1,7 +1,4 @@
 import { expect, test } from "bun:test";
-import { cn } from "@/lib/cn";
-import { addRecipeStep, moveRecipeStep } from "@/lib/image-recipe";
-import { round } from "@/lib/math";
 import {
   getResizeDefaultParameters,
   getResizeLayout,
@@ -9,40 +6,6 @@ import {
   ResizeRecipe,
   resizeWithUpdatedDimension,
 } from "@/lib/recipes";
-
-test("merges Tailwind utility classes", () => {
-  expect(cn("px-2", "px-4")).toBe("px-4");
-});
-
-test("rounds values to a requested decimal precision", () => {
-  expect(round(12.5)).toBe(13);
-  expect(round(1.005, 2)).toBe(1.01);
-  expect(round(-1.005, 2)).toBe(-1.01);
-  expect(round(1_234, -2)).toBe(1_200);
-});
-
-test("adds editable operation defaults to a recipe", () => {
-  const recipe = addRecipeStep([], "resize");
-
-  expect(recipe).toHaveLength(1);
-  expect(recipe[0]?.parameters).toEqual({
-    aspectRatioLocked: true,
-    width: 1600,
-    height: 900,
-    fit: "contain",
-  });
-});
-
-test("uses the input image dimensions for a new resize operation", () => {
-  const recipe = addRecipeStep([], "resize", { width: 3024, height: 4032 });
-
-  expect(recipe[0]?.parameters).toEqual({
-    aspectRatioLocked: true,
-    width: 3024,
-    height: 4032,
-    fit: "contain",
-  });
-});
 
 test("creates resize defaults from the original image dimensions", () => {
   expect(getResizeDefaultParameters({ width: 3024, height: 4032 })).toEqual({
@@ -71,15 +34,6 @@ test("leaves the paired resize dimension unchanged while the aspect ratio is unl
       600,
     ),
   ).toMatchObject({ width: 1600, height: 600 });
-});
-
-test("moves an operation without mutating the existing recipe", () => {
-  const first = addRecipeStep([], "resize");
-  const recipe = addRecipeStep(first, "resize");
-  const moved = moveRecipeStep(recipe, 1, 0);
-
-  expect(moved[0]?.id).toBe(recipe[1]?.id);
-  expect(recipe[0]?.id).not.toBe(recipe[1]?.id);
 });
 
 test("resize recipe is a Recipe implementation and preserves aspect ratio with contain", () => {
