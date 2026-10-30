@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test";
-
-import { addRecipeStep, moveRecipeStep } from "@/features/workspace/model";
 import { cn } from "@/lib/cn";
+import { addRecipeStep, moveRecipeStep } from "@/lib/imageRecipe";
 
 test("merges Tailwind utility classes", () => {
   expect(cn("px-2", "px-4")).toBe("px-4");

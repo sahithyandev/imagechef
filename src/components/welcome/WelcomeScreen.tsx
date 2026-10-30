@@ -4,8 +4,8 @@ import modernAbstractImage from "@/assets/photo-abstract-painting.jpg";
 import alpineLakeImage from "@/assets/photo-alpine-lake.jpg";
 import rainLeavesImage from "@/assets/photo-rain-leaves.jpg";
 import { Brand } from "@/components/Brand";
-import { SampleImageDisplay } from "@/components/SampleImageDisplay";
-import type { ImageAsset } from "@/features/workspace/model";
+import { SampleImageDisplay } from "@/components/welcome/SampleImageDisplay";
+import type { ImageAsset } from "@/lib/imageRecipe";
 
 const sampleAssets: Array<
   ImageAsset & { alt: string; creditName: string; creditUrl: string; label: string; name: string }

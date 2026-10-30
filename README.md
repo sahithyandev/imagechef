@@ -23,6 +23,12 @@ bun run typecheck
 bun run check
 ```
 
+## Deployment
+
+`bun run build` prerenders the initial workspace into `dist/index.html` and then ships the
+JavaScript bundle for React hydration. Vercel can deploy the project as a Vite static site with
+the default build command and `dist` as its output directory; no serverless function is needed.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the project's code conventions and verification requirements.

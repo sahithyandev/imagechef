@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
+import { WelcomeScreen } from "@/components/welcome/WelcomeScreen";
+import { Workspace, type WorkspacePanel } from "@/components/workspace/Workspace";
 import {
   addRecipeStep,
   type ImageAsset,
   type OperationDefinition,
   type RecipeStep,
-} from "@/features/workspace/model";
-import { WelcomeScreen } from "@/features/workspace/WelcomeScreen";
-import { Workspace, type WorkspacePanel } from "@/features/workspace/Workspace";
+} from "@/lib/imageRecipe";
 
 const supportedImageTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const workspaceDraftStorageKey = "image-chef.workspace-draft";

@@ -1,4 +1,4 @@
-import type { ImageAsset } from "@/features/workspace/model";
+import type { ImageAsset } from "@/lib/imageRecipe";
 
 export function SampleImageDisplay({
   sample,

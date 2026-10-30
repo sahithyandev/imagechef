@@ -1,7 +1,7 @@
 import { ChevronDown, Plus, Search, SlidersHorizontal } from "lucide-react";
 
-import { PanelHeading } from "@/components/PanelHeading";
-import type { OperationDefinition } from "@/features/workspace/model";
+import { PanelHeading } from "@/components/workspace/PanelHeading";
+import type { OperationDefinition } from "@/lib/imageRecipe";
 
 export function OperationLibrary({
   collapsedCategories,

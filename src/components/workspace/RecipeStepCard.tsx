@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 
-import { getOperation, type OperationParameter, type RecipeStep } from "@/features/workspace/model";
+import { getOperation, type OperationParameter, type RecipeStep } from "@/lib/imageRecipe";
 
 export function RecipeStepCard({
   index,

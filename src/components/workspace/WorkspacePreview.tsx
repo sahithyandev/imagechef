@@ -1,7 +1,7 @@
 import { FileImage, ImageUp } from "lucide-react";
 
-import { PanelHeading } from "@/components/PanelHeading";
-import type { ImageAsset, RecipeStep } from "@/features/workspace/model";
+import { PanelHeading } from "@/components/workspace/PanelHeading";
+import type { ImageAsset, RecipeStep } from "@/lib/imageRecipe";
 
 export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe: RecipeStep[] }) {
   const activeSteps = recipe.filter((step) => step.enabled).length;
