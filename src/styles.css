@@ -195,10 +195,10 @@
     @apply flex items-center gap-5;
   }
   .workspace {
-    @apply grid min-h-[calc(100dvh-64px)] grid-cols-[minmax(220px,0.78fr)_minmax(360px,1.22fr)_minmax(300px,0.95fr)];
+    @apply grid h-[calc(100dvh-64px)] overflow-hidden grid-cols-[minmax(220px,0.78fr)_minmax(360px,1.22fr)_minmax(300px,0.95fr)];
   }
   .workspace-panel {
-    @apply min-w-0 p-6;
+    @apply min-w-0 overflow-y-auto p-6;
   }
   .panel-heading {
     @apply mt-0 mb-[22px] flex items-center gap-[9px] text-[0.86rem] tracking-[-0.01em] text-ink;
@@ -215,7 +215,7 @@
   }
   .image-stage img,
   .output-preview img {
-    @apply size-full max-h-[420px] object-contain;
+    @apply block h-auto max-h-[420px] max-w-full;
   }
   .file-details {
     @apply grid py-4;
@@ -379,10 +379,10 @@
       @apply border-b-accent text-ink;
     }
     .workspace {
-      @apply block min-h-[calc(100dvh-109px)];
+      @apply block h-auto min-h-[calc(100dvh-109px)] overflow-visible;
     }
     .workspace-panel {
-      @apply hidden border-0 px-[18px] py-5;
+      @apply hidden overflow-visible border-0 px-[18px] py-5;
     }
     .preview-panel {
       @apply gap-3;
