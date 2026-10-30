@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 
-import { App } from "@/app/app";
-import { AppProviders } from "@/app/app-providers";
+import { App } from "@/app";
+import { AppProviders } from "@/app-providers";
 import "@/styles.css";
 
 const rootElement = document.getElementById("root");
