@@ -14,6 +14,12 @@ test("adds editable operation defaults to a recipe", () => {
   expect(recipe[0]?.parameters).toEqual({ width: 1600, height: 900, fit: "contain" });
 });
 
+test("uses the input image dimensions for a new resize operation", () => {
+  const recipe = addRecipeStep([], "resize", { width: 3024, height: 4032 });
+
+  expect(recipe[0]?.parameters).toEqual({ width: 3024, height: 4032, fit: "contain" });
+});
+
 test("moves an operation without mutating the existing recipe", () => {
   const first = addRecipeStep([], "resize");
   const recipe = addRecipeStep(first, "resize");

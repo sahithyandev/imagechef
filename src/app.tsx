@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { WelcomeScreen } from "@/screens/welcome";
-import { Workspace, type WorkspacePanel } from "@/screens/workspace";
 import {
   addRecipeStep,
   type ImageAsset,
   type OperationDefinition,
   type RecipeStep,
 } from "@/lib/image-recipe";
+import { WelcomeScreen } from "@/screens/welcome";
+import { Workspace, type WorkspacePanel } from "@/screens/workspace";
 
 const supportedImageTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const workspaceDraftStorageKey = "image-chef.workspace-draft";
@@ -82,6 +82,14 @@ const readFileAsDataUrl = (file: File) =>
     reader.readAsDataURL(file);
   });
 
+const getImageDimensions = async (sourceUrl: string) => {
+  const image = new Image();
+  image.src = sourceUrl;
+  await image.decode();
+
+  return { height: image.naturalHeight, width: image.naturalWidth };
+};
+
 export function App() {
   const [asset, setAsset] = useState<ImageAsset | null>(null);
   const [recipe, setRecipe] = useState<RecipeStep[]>([]);
@@ -128,7 +136,8 @@ export function App() {
       const previewUrl = await readFileAsDataUrl(file);
 
       setError(null);
-      setAsset({ name: file.name, size: file.size, type: file.type, previewUrl });
+      const dimensions = await getImageDimensions(previewUrl);
+      setAsset({ name: file.name, size: file.size, type: file.type, previewUrl, ...dimensions });
     } catch {
       setError("The selected image could not be staged. Try another file.");
     }
@@ -147,8 +156,14 @@ export function App() {
       // The sample remains usable if its byte size cannot be read.
     }
 
-    setError(null);
-    setAsset({ ...sample, size });
+    try {
+      const dimensions = await getImageDimensions(sample.previewUrl);
+
+      setError(null);
+      setAsset({ ...sample, size, ...dimensions });
+    } catch {
+      setError("The selected image could not be staged. Try another file.");
+    }
   };
 
   if (!asset) {
@@ -161,7 +176,13 @@ export function App() {
       asset={asset}
       collapsedCategories={collapsedCategories}
       onAddOperation={(operationId: OperationDefinition["id"]) =>
-        setRecipe((current) => addRecipeStep(current, operationId))
+        setRecipe((current) =>
+          addRecipeStep(
+            current,
+            operationId,
+            asset.width && asset.height ? { width: asset.width, height: asset.height } : undefined,
+          ),
+        )
       }
       onNewImage={() => setAsset(null)}
       onSetActivePanel={setActivePanel}

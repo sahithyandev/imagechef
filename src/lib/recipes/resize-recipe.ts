@@ -90,6 +90,6 @@ export class ResizeRecipe extends Recipe<ResizeParameters> {
       layout.destinationHeight,
     );
 
-    return { source: canvas, width: canvas.width, height: canvas.height };
+    return { source: canvas, type: image.type, width: canvas.width, height: canvas.height };
   }
 }

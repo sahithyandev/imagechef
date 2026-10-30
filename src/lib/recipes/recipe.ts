@@ -12,6 +12,7 @@ export interface RecipeDefinition {
 
 export interface RecipeImage {
   source: CanvasImageSource;
+  type: string;
   width: number;
   height: number;
 }

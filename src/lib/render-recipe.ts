@@ -30,6 +30,7 @@ const loadImage = async (sourceUrl: string) => {
 export const renderRecipe = async (
   sourceUrl: string,
   steps: RecipeStep[],
+  sourceType: string,
 ): Promise<RenderedRecipe | null> => {
   const recipes = steps
     .filter((step) => step.enabled)
@@ -45,7 +46,12 @@ export const renderRecipe = async (
     canvas.height = height;
     return canvas;
   };
-  let image: RecipeImage = { source, width: source.naturalWidth, height: source.naturalHeight };
+  let image: RecipeImage = {
+    source,
+    type: sourceType,
+    width: source.naturalWidth,
+    height: source.naturalHeight,
+  };
 
   for (const recipe of recipes) {
     image = recipe.apply(image, createCanvas);
@@ -53,5 +59,5 @@ export const renderRecipe = async (
 
   const canvas = image.source as HTMLCanvasElement;
 
-  return { dataUrl: canvas.toDataURL(), width: image.width, height: image.height };
+  return { dataUrl: canvas.toDataURL(image.type), width: image.width, height: image.height };
 };

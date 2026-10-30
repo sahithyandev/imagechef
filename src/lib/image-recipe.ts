@@ -18,11 +18,13 @@ export interface RecipeStep {
 }
 
 export interface ImageAsset {
+  height?: number;
   isSample?: boolean;
   name: string;
   size: number;
   type: string;
   previewUrl: string;
+  width?: number;
 }
 
 export const operationCatalogue: OperationDefinition[] = recipeCatalogue.map((recipe) => ({
@@ -40,8 +42,16 @@ export const getOperation = (id: OperationId) => {
   return operation;
 };
 
-export const addRecipeStep = (recipe: RecipeStep[], operationId: OperationId): RecipeStep[] => {
+export const addRecipeStep = (
+  recipe: RecipeStep[],
+  operationId: OperationId,
+  imageDimensions?: { height: number; width: number },
+): RecipeStep[] => {
   const operation = getOperation(operationId);
+  const parameters =
+    operationId === "resize" && imageDimensions
+      ? { ...operation.defaults, width: imageDimensions.width, height: imageDimensions.height }
+      : operation.defaults;
 
   return [
     ...recipe,
@@ -49,7 +59,7 @@ export const addRecipeStep = (recipe: RecipeStep[], operationId: OperationId): R
       id: `${operationId}-${crypto.randomUUID()}`,
       operationId,
       enabled: true,
-      parameters: { ...operation.defaults },
+      parameters: { ...parameters },
     },
   ];
 };

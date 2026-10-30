@@ -48,7 +48,7 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
     setOutput(null);
     setError(null);
 
-    void renderRecipe(asset.previewUrl, recipe)
+    void renderRecipe(asset.previewUrl, recipe, asset.type)
       .then((result) => {
         if (isCurrent) setOutput(result);
       })
@@ -59,7 +59,7 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
     return () => {
       isCurrent = false;
     };
-  }, [asset.previewUrl, recipe]);
+  }, [asset.previewUrl, asset.type, recipe]);
 
   return (
     <section className="workspace-panel preview-panel" aria-label="Input and output previews">
