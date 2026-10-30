@@ -11,7 +11,7 @@ export function SampleImageDisplay({
     label: string;
     name: string;
   };
-  onSelect: (sample: ImageAsset) => void;
+  onSelect: (sample: ImageAsset) => Promise<void>;
 }) {
   return (
     <article className="overflow-hidden border border-line bg-surface focus-within:border-accent">
@@ -19,7 +19,7 @@ export function SampleImageDisplay({
         aria-label={`Use ${sample.name} test image`}
         className="grid w-full text-left transition-[background] duration-150 ease-in-out hover:bg-surface-hover"
         type="button"
-        onClick={() => onSelect(sample)}
+        onClick={() => void onSelect(sample)}
       >
         <img alt={sample.alt} className="aspect-3/2 w-full object-cover" src={sample.previewUrl} />
         <span className="grid gap-0.5 p-3">

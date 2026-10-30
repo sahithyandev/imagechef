@@ -134,9 +134,21 @@ export function App() {
     }
   };
 
-  const stageSample = (sample: ImageAsset) => {
+  const stageSample = async (sample: ImageAsset) => {
+    let size = sample.size;
+
+    try {
+      const response = await fetch(sample.previewUrl);
+
+      if (response.ok) {
+        size = (await response.blob()).size;
+      }
+    } catch {
+      // The sample remains usable if its byte size cannot be read.
+    }
+
     setError(null);
-    setAsset(sample);
+    setAsset({ ...sample, size });
   };
 
   if (!asset) {

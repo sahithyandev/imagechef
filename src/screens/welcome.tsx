@@ -54,7 +54,7 @@ export function WelcomeScreen({
 }: {
   error: string | null;
   onStageFile: (file: File | undefined) => Promise<void>;
-  onStageSample: (sample: ImageAsset) => void;
+  onStageSample: (sample: ImageAsset) => Promise<void>;
 }) {
   return (
     <main className="app-shell welcome-shell">
