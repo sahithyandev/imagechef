@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import {
+  getResizeCompressionRatioPercentage,
   getResizeDefaultParameters,
   getResizeLayout,
   normalizeResizeParameters,
@@ -15,6 +16,19 @@ test("creates resize defaults from the original image dimensions", () => {
     height: 4032,
     fit: "contain",
   });
+});
+
+test("calculates the input size removed by compression", () => {
+  expect(getResizeCompressionRatioPercentage(395.78, 18.96)).toBe(95.21);
+  expect(getResizeCompressionRatioPercentage(4_000, 1_000)).toBe(75);
+  expect(getResizeCompressionRatioPercentage(3, 1)).toBe(66.67);
+  expect(getResizeCompressionRatioPercentage(1_000, 1_500)).toBe(-50);
+});
+
+test("does not calculate a compression ratio for invalid file sizes", () => {
+  expect(getResizeCompressionRatioPercentage(0, 100)).toBeUndefined();
+  expect(getResizeCompressionRatioPercentage(100, -1)).toBeUndefined();
+  expect(getResizeCompressionRatioPercentage(Number.NaN, 100)).toBeUndefined();
 });
 
 test("declares the resize editor controls with parameter options", () => {

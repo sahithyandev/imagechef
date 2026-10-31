@@ -4,6 +4,7 @@ import {
   type RecipeDefinition,
   type RecipeImage,
 } from "@/lib/recipes/recipe";
+import { round } from "@/lib/math";
 import { z } from "zod";
 
 export type ResizeLayout = {
@@ -49,6 +50,20 @@ export const getResizeDefaultParameters = ({
   height: resizeDimensionSchema.catch(resizeParameterDefaults.height).parse(height),
   fit: resizeParameterDefaults.fit,
 });
+
+/** Returns the percentage of the input file size removed by compression. */
+export const getResizeCompressionRatioPercentage = (inputSize: number, outputSize: number) => {
+  if (
+    !Number.isFinite(inputSize) ||
+    !Number.isFinite(outputSize) ||
+    inputSize <= 0 ||
+    outputSize < 0
+  ) {
+    return undefined;
+  }
+
+  return round((1 - outputSize / inputSize) * 100, 2);
+};
 
 export const resizeWithUpdatedDimension = (
   parameters: unknown,
