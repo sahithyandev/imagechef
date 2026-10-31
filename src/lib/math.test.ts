@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+
 import { round } from "@/lib/math";
 
 test("rounds values to a requested decimal precision", () => {

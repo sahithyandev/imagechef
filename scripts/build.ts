@@ -1,4 +1,5 @@
 import { rm } from "node:fs/promises";
+
 import { build } from "vite";
 
 const clientOutputDirectory = "dist";

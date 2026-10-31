@@ -66,7 +66,7 @@
   }
 
   body {
-    @apply m-0 min-w-80 bg-canvas text-ink antialiased;
+    @apply bg-canvas text-ink m-0 min-w-80 antialiased;
   }
 
   button,
@@ -83,7 +83,7 @@
 
   button:focus-visible,
   input:focus-visible {
-    @apply outline-2 outline-offset-3 outline-accent;
+    @apply outline-accent outline-2 outline-offset-3;
   }
 
   ::selection {
@@ -94,7 +94,7 @@
     @apply size-2.5;
   }
   ::-webkit-scrollbar-thumb {
-    @apply rounded-[10px] border-[3px] border-surface bg-line-subtle;
+    @apply border-surface bg-line-subtle rounded-[10px] border-[3px];
   }
 }
 
@@ -108,25 +108,25 @@
     background-image: radial-gradient(circle at 82% 12%, var(--color-glow) 0, transparent 31rem);
   }
   .topbar {
-    @apply flex min-h-16 items-center justify-between border-b border-line px-7;
+    @apply border-line flex min-h-16 items-center justify-between border-b px-7;
   }
   .welcome-topbar {
     @apply border-b-transparent;
   }
   .brand {
-    @apply text-[1.15rem] font-bold tracking-[-0.05em] text-ink no-underline;
+    @apply text-ink text-[1.15rem] font-bold tracking-[-0.05em] no-underline;
   }
   .brand span {
-    @apply font-medium text-accent;
+    @apply text-accent font-medium;
   }
   .status-note {
-    @apply flex items-center gap-2 text-[0.78rem] text-muted;
+    @apply text-muted flex items-center gap-2 text-[0.78rem];
   }
   .status-dot {
-    @apply size-[7px] rounded-full bg-accent;
+    @apply bg-accent size-[7px] rounded-full;
   }
   .welcome-content {
-    @apply grid min-h-[calc(100dvh-64px)] max-w-[1280px] content-center gap-[52px] mx-auto px-7 pt-[clamp(36px,7vh,84px)] pb-15;
+    @apply mx-auto grid min-h-[calc(100dvh-64px)] max-w-[1280px] content-center gap-[52px] px-7 pt-[clamp(36px,7vh,84px)] pb-15;
   }
   .welcome-copy {
     @apply max-w-[980px];
@@ -135,26 +135,26 @@
     @apply m-0 max-w-[20ch] text-[clamp(2.8rem,7vw,5.7rem)] leading-[0.91] tracking-[-0.065em] text-balance;
   }
   .welcome-copy p:not(.overline) {
-    @apply mt-7 mb-0 max-w-[70ch] text-[1.1rem] leading-[1.6] text-copy;
+    @apply text-copy mt-7 mb-0 max-w-[70ch] text-[1.1rem] leading-[1.6];
   }
 
   .welcome-actions {
     @apply grid gap-6;
   }
   .dropzone {
-    @apply flex min-h-[270px] flex-col items-center justify-center gap-3 border border-dashed border-dropzone-line bg-surface p-[34px] text-center transition-[border-color,background] duration-200 ease-in-out;
+    @apply border-dropzone-line bg-surface flex min-h-[270px] flex-col items-center justify-center gap-3 border border-dashed p-[34px] text-center transition-[border-color,background] duration-200 ease-in-out;
   }
   .dropzone:hover {
     @apply border-accent bg-surface-hover;
   }
   .dropzone-icon {
-    @apply grid size-12 place-content-center bg-accent text-canvas;
+    @apply bg-accent text-canvas grid size-12 place-content-center;
   }
   .dropzone > strong {
     @apply text-[1.1rem];
   }
   .dropzone > span:not(.button):not(.dropzone-icon) {
-    @apply text-[0.85rem] text-muted;
+    @apply text-muted text-[0.85rem];
   }
 
   .sample-images {
@@ -166,11 +166,11 @@
   }
 
   .sample-images-heading h2 {
-    @apply m-0 text-[0.9rem] text-ink;
+    @apply text-ink m-0 text-[0.9rem];
   }
 
   .sample-images-heading p {
-    @apply m-0 text-[0.78rem] text-muted;
+    @apply text-muted m-0 text-[0.78rem];
   }
 
   .sample-image-grid {
@@ -181,10 +181,10 @@
     @apply inline-flex min-h-[37px] items-center justify-center border border-transparent px-3.5 text-[0.84rem] font-[650] transition-[background,color] duration-150 ease-in-out;
   }
   .button-primary {
-    @apply mt-1.5 bg-accent text-canvas;
+    @apply bg-accent text-canvas mt-1.5;
   }
   .button-secondary {
-    @apply border-line-strong bg-transparent text-ink;
+    @apply border-line-strong text-ink bg-transparent;
   }
   .button-secondary:hover:not(:disabled) {
     @apply border-accent text-accent;
@@ -193,29 +193,29 @@
     @apply cursor-not-allowed opacity-[0.43];
   }
   .inline-error {
-    @apply -mt-[30px] bg-error-surface px-3.5 py-3 text-error;
+    @apply bg-error-surface text-error -mt-[30px] px-3.5 py-3;
   }
   .topbar-actions {
     @apply flex items-center gap-5;
   }
   .workspace {
-    @apply grid h-[calc(100dvh-64px)] overflow-hidden grid-cols-[minmax(220px,0.78fr)_minmax(360px,1.22fr)_minmax(300px,0.95fr)];
+    @apply grid h-[calc(100dvh-64px)] grid-cols-[minmax(220px,0.78fr)_minmax(360px,1.22fr)_minmax(300px,0.95fr)] overflow-hidden;
   }
   .workspace-panel {
     @apply min-w-0 overflow-y-auto p-6;
   }
   .panel-heading {
-    @apply mt-0 mb-[22px] flex items-center gap-[9px] text-[0.86rem] tracking-[-0.01em] text-ink;
+    @apply text-ink mt-0 mb-[22px] flex items-center gap-[9px] text-[0.86rem] tracking-[-0.01em];
   }
   .panel-heading svg {
     @apply text-accent;
   }
   .panel-intro {
-    @apply -mt-3 mb-5 text-[0.8rem] leading-[1.45] text-muted;
+    @apply text-muted -mt-3 mb-5 text-[0.8rem] leading-[1.45];
   }
   .image-stage,
   .output-preview {
-    @apply grid min-h-60 place-items-center overflow-hidden bg-stage;
+    @apply bg-stage grid min-h-60 place-items-center overflow-hidden;
   }
   .image-stage img,
   .output-preview img {
@@ -229,13 +229,13 @@
   }
   .output-copy p,
   .recipe-step p {
-    @apply text-[0.78rem] leading-[1.45] text-muted;
+    @apply text-muted text-[0.78rem] leading-[1.45];
   }
   .search-field {
-    @apply flex items-center gap-[9px] border-b border-line-strong pb-[9px] text-muted;
+    @apply border-line-strong text-muted flex items-center gap-[9px] border-b pb-[9px];
   }
   .search-field input {
-    @apply min-w-0 w-full border-0 bg-transparent text-ink outline-0;
+    @apply text-ink w-full min-w-0 border-0 bg-transparent outline-0;
   }
   .search-field input::placeholder {
     @apply text-placeholder;
@@ -244,22 +244,22 @@
     @apply mt-4 grid gap-2;
   }
   .operation-category {
-    @apply border-b border-line pb-2;
+    @apply border-line border-b pb-2;
   }
   .category-trigger {
-    @apply flex w-full items-center justify-between bg-transparent px-0 py-2.5 text-left text-[0.72rem] font-bold uppercase tracking-[0.08em] text-muted;
+    @apply text-muted flex w-full items-center justify-between bg-transparent px-0 py-2.5 text-left text-[0.72rem] font-bold tracking-[0.08em] uppercase;
   }
   .category-trigger > span {
     @apply flex items-center gap-2;
   }
   .category-trigger small {
-    @apply text-[0.65rem] font-medium tracking-normal text-placeholder;
+    @apply text-placeholder text-[0.65rem] font-medium tracking-normal;
   }
   .category-trigger svg {
     @apply transition-transform duration-150 ease-out;
   }
   .operation-option {
-    @apply flex w-full min-h-[62px] items-center justify-between gap-2.5 border-0 border-t border-line-subtle bg-transparent px-1 py-2.5 text-left text-ink;
+    @apply border-line-subtle text-ink flex min-h-[62px] w-full items-center justify-between gap-2.5 border-0 border-t bg-transparent px-1 py-2.5 text-left;
   }
   .operation-option:hover {
     @apply bg-surface-hover;
@@ -272,25 +272,25 @@
     @apply text-[0.8rem];
   }
   .operation-option small {
-    @apply mt-[3px] pr-2 text-[0.69rem] leading-[1.35] text-muted;
+    @apply text-muted mt-[3px] pr-2 text-[0.69rem] leading-[1.35];
   }
   .operation-option svg {
-    @apply shrink-0 text-accent;
+    @apply text-accent shrink-0;
   }
   .empty-library {
-    @apply m-0 px-1 py-5 text-[0.8rem] leading-[1.45] text-muted;
+    @apply text-muted m-0 px-1 py-5 text-[0.8rem] leading-[1.45];
   }
   .recipe-list {
     @apply mt-0;
   }
   .section-label {
-    @apply flex justify-between text-[0.7rem] font-bold uppercase tracking-[0.08em] text-muted;
+    @apply text-muted flex justify-between text-[0.7rem] font-bold tracking-[0.08em] uppercase;
   }
   .empty-recipe {
-    @apply mt-3.5 mb-0 text-[0.83rem] leading-[1.5] text-muted;
+    @apply text-muted mt-3.5 mb-0 text-[0.83rem] leading-[1.5];
   }
   .recipe-step {
-    @apply border-b border-line py-[15px];
+    @apply border-line border-b py-[15px];
   }
   .recipe-step.is-disabled {
     @apply opacity-50;
@@ -302,7 +302,7 @@
     @apply text-[0.84rem];
   }
   .toggle-button {
-    @apply min-w-[26px] border-0 bg-accent px-1 py-[3px] text-[0.62rem] font-extrabold text-canvas;
+    @apply bg-accent text-canvas min-w-[26px] border-0 px-1 py-[3px] text-[0.62rem] font-extrabold;
   }
   .is-disabled .toggle-button {
     @apply bg-line-strong text-ink;
@@ -311,7 +311,7 @@
     @apply ml-auto flex gap-0.5;
   }
   .step-actions button {
-    @apply inline-flex items-center border-0 bg-transparent p-1 text-muted;
+    @apply text-muted inline-flex items-center border-0 bg-transparent p-1;
   }
   .step-actions button:hover:not(:disabled) {
     @apply text-accent;
@@ -326,13 +326,13 @@
     @apply ml-[35px] grid grid-cols-2 gap-2;
   }
   .parameter-grid label {
-    @apply grid gap-1 text-[0.66rem] capitalize text-muted;
+    @apply text-muted grid gap-1 text-[0.66rem] capitalize;
   }
   .parameter-grid input:not([type="checkbox"]) {
-    @apply min-w-0 border border-line-subtle bg-surface-raised p-1.5 text-[0.76rem] text-ink;
+    @apply border-line-subtle bg-surface-raised text-ink min-w-0 border p-1.5 text-[0.76rem];
   }
   .parameter-grid input[type="checkbox"] {
-    @apply my-0.5 size-4 accent-accent;
+    @apply accent-accent my-0.5 size-4;
   }
   .preview-panel {
     @apply flex flex-col;
@@ -347,10 +347,10 @@
     @apply relative min-h-0;
   }
   .preview-scrim {
-    @apply absolute inset-0 flex items-center justify-center bg-scrim text-[0.75rem] font-[650] text-ink;
+    @apply bg-scrim text-ink absolute inset-0 flex items-center justify-center text-[0.75rem] font-[650];
   }
   .preview-scrim span {
-    @apply border border-line-strong px-2.5 py-2;
+    @apply border-line-strong border px-2.5 py-2;
   }
   .output-copy {
     @apply mt-5;
@@ -374,10 +374,10 @@
     }
 
     .mobile-tabs {
-      @apply grid grid-cols-3 border-b border-line;
+      @apply border-line grid grid-cols-3 border-b;
     }
     .mobile-tabs button {
-      @apply border-0 border-b-2 border-b-transparent bg-transparent px-2.5 pt-3.5 pb-[11px] capitalize text-muted;
+      @apply text-muted border-0 border-b-2 border-b-transparent bg-transparent px-2.5 pt-3.5 pb-[11px] capitalize;
     }
     .mobile-tabs button.active {
       @apply border-b-accent text-ink;

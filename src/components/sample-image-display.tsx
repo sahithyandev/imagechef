@@ -14,24 +14,24 @@ export function SampleImageDisplay({
   onSelect: (sample: ImageAsset) => Promise<void>;
 }) {
   return (
-    <article className="overflow-hidden border border-line bg-surface focus-within:border-accent">
+    <article className="border-line bg-surface focus-within:border-accent overflow-hidden border">
       <button
         aria-label={`Use ${sample.name} test image`}
-        className="grid w-full text-left transition-[background] duration-150 ease-in-out hover:bg-surface-hover"
+        className="hover:bg-surface-hover grid w-full text-left transition-[background] duration-150 ease-in-out"
         type="button"
         onClick={() => void onSelect(sample)}
       >
         <img alt={sample.alt} className="aspect-3/2 w-full object-cover" src={sample.previewUrl} />
         <span className="grid gap-0.5 p-3">
-          <small className="text-[0.5rem] font-bold uppercase tracking-widest text-accent">
+          <small className="text-accent text-[0.5rem] font-bold tracking-widest uppercase">
             {sample.label}
           </small>
-          <strong className="text-[0.84rem] text-ink">{sample.name}</strong>
+          <strong className="text-ink text-[0.84rem]">{sample.name}</strong>
         </span>
       </button>
       <a
         aria-label={`View ${sample.name} by ${sample.creditName} on Unsplash`}
-        className="block overflow-hidden text-ellipsis whitespace-nowrap border-t border-line px-3 py-2 text-[0.68rem] text-muted underline underline-offset-2 hover:text-accent"
+        className="border-line text-muted hover:text-accent block overflow-hidden border-t px-3 py-2 text-[0.68rem] text-ellipsis whitespace-nowrap underline underline-offset-2"
         href={sample.creditUrl}
         rel="noreferrer"
         target="_blank"

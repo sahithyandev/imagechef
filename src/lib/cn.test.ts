@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+
 import { cn } from "@/lib/cn";
 
 test("merges Tailwind utility classes", () => {

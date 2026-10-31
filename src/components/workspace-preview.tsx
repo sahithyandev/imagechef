@@ -102,9 +102,9 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
             }}
           />
         </div>
-        <div className="grid grid-rows-2 grid-cols-3 gap-y-1 gap-x-3 py-4">
+        <div className="grid grid-cols-3 grid-rows-2 gap-x-3 gap-y-1 py-4">
           <strong
-            className="overflow-hidden col-start-1 col-span-3 row-start-1 text-[0.87rem] text-ellipsis whitespace-nowrap"
+            className="col-span-3 col-start-1 row-start-1 overflow-hidden text-[0.87rem] text-ellipsis whitespace-nowrap"
             title={asset.name}
           >
             {asset.name}

@@ -7,9 +7,9 @@ import { WorkspacePreview } from "@/components/workspace-preview";
 import {
   type ImageAsset,
   moveRecipeStep,
+  operationCatalogue,
   type OperationDefinition,
   type OperationParameter,
-  operationCatalogue,
   type RecipeStep,
 } from "@/lib/image-recipe";
 import { resizeWithUpdatedAspectRatioLock, resizeWithUpdatedDimension } from "@/lib/recipes";
