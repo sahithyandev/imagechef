@@ -11,12 +11,11 @@
     "build": "bun scripts/build.ts",
     "test": "bun test",
     "typecheck": "bun check",
-    "lint": "biome check .",
-    "format": "biome check --write .",
-    "verify": "bun run lint && bun run typecheck && bun run test && bun run build"
+    "format": "bun fmt",
+    "format:check": "bun fmt --check",
+    "verify": "bun run format:check && bun run typecheck && bun run test && bun run build"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.3",
     "@tailwindcss/vite": "^4.3.3",
     "@types/bun": "latest",
     "@types/react": "^19.3.0",

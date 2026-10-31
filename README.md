@@ -25,7 +25,7 @@ Static-site hosting, browser extensions, or analytics added by a deployer may ha
 - Vite with React Fast Refresh and Tailwind CSS v4's official Vite plugin
 - Base UI for accessible headless UI primitives
 - TanStack Query, TanStack Router, Zustand, and Zod for future application needs
-- Biome for formatting, import organization, and linting
+- Bun's built-in formatter for formatting, import organization, and Tailwind class sorting
 
 ## Commands
 
@@ -34,12 +34,13 @@ bun install
 bun run dev
 bun run build
 bun run test
-bun run lint
+bun run format
+bun run format:check
 bun run typecheck
 bun run verify
 ```
 
-`bun run verify` is the release verification command. It formats/lints, type-checks, runs tests, and creates a production build.
+`bun run verify` is the release verification command. It checks formatting, type-checks, runs tests, and creates a production build.
 
 ## Deployment
 

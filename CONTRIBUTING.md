@@ -31,4 +31,4 @@
 
 ### Verification
 
-Run `bun check` before handing off a change. It runs formatting checks, type checking, tests, and the production build.
+Run `bun run verify` before handing off a change. It checks formatting, type-checks, runs tests, and creates a production build. Use `bun run format` to apply formatting fixes.
