@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <title>Image Chef</title>
+  <title>imagechef</title>
   <rect width="64" height="64" rx="14" fill="#141614"/>
   <path d="M14 14h15v6h-9v9h-6zm21 0h15v15h-6v-9h-9zm9 21h6v15H35v-6h9zm-30 0h6v9h9v6H14z" fill="#c4ff5b"/>
   <path d="m32 22 2.7 6.5L41 31l-6.3 2.5L32 40l-2.7-6.5L23 31l6.3-2.5z" fill="#c4ff5b"/>

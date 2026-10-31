@@ -1,6 +1,6 @@
-# Image Chef architecture
+# imagechef architecture
 
-Image Chef is a browser-first React application for building an image transformation recipe. It currently stages an image and lets a user compose operations; actual image processing and export are intentionally not connected yet.
+imagechefis a browser-first React application for building an image transformation recipe. It currently stages an image and lets a user compose operations; actual image processing and export are intentionally not connected yet.
 
 ## Source layout
 

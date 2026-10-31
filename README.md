@@ -1,4 +1,4 @@
-# Image Chef
+# imagechef
 
 A browser-first image transformation workspace. Users can upload an image or start with one of the built-in test photographs.
 

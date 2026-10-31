@@ -13,7 +13,7 @@ inspectable image transformations.
 
 ## Product Purpose
 
-Image Chef will let users stage an image, assemble an ordered transformation recipe,
+imagechef will let users stage an image, assemble an ordered transformation recipe,
 and inspect the resulting output in the browser.
 
 ## Positioning

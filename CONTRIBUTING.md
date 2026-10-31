@@ -1,4 +1,4 @@
-# Contributing to Image Chef
+# Contributing to imagechef
 
 ## Code conventions
 
