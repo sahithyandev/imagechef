@@ -7,6 +7,7 @@ export type {
   RecipeDefinition,
   RecipeImage,
   RecipeParameter,
+  RecipeParameterOption,
 } from "@/lib/recipes/recipe";
 export { Recipe } from "@/lib/recipes/recipe";
 export type { ResizeFit, ResizeLayout, ResizeParameters } from "@/lib/recipes/resize-recipe";

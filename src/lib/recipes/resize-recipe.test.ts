@@ -17,6 +17,24 @@ test("creates resize defaults from the original image dimensions", () => {
   });
 });
 
+test("declares the resize editor controls with parameter options", () => {
+  expect(new ResizeRecipe().definition.options).toEqual([
+    { key: "width", label: "Width", type: "number", min: 1, step: 1 },
+    { key: "height", label: "Height", type: "number", min: 1, step: 1 },
+    { key: "aspectRatioLocked", label: "Lock aspect ratio", type: "boolean" },
+    {
+      key: "fit",
+      label: "Fit",
+      type: "select",
+      choices: [
+        { value: "contain", label: "Contain" },
+        { value: "cover", label: "Cover" },
+        { value: "fill", label: "Fill" },
+      ],
+    },
+  ]);
+});
+
 test("normalizes invalid and missing resize parameters with schema defaults", () => {
   expect(
     normalizeResizeParameters({ aspectRatioLocked: "yes", width: -10, height: undefined, fit: "stretch" }),

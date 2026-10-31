@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Lock, LockOpen, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 
 import { getOperation, type OperationParameter, type RecipeStep } from "@/lib/image-recipe";
 
@@ -18,9 +18,6 @@ export function RecipeStepCard({
   step: RecipeStep;
 }) {
   const operation = getOperation(step.operationId);
-  const aspectRatioLocked = step.parameters.aspectRatioLocked !== false;
-  const width = typeof step.parameters.width === "number" ? step.parameters.width : "";
-  const height = typeof step.parameters.height === "number" ? step.parameters.height : "";
 
   return (
     <article className={`recipe-step${step.enabled ? "" : " is-disabled"}`}>
@@ -57,76 +54,63 @@ export function RecipeStepCard({
       </div>
       <p>{operation.description}</p>
       <div className="parameter-grid">
-        {step.operationId === "resize" ? (
-          <div className="col-span-2 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_32px] items-end gap-1.5">
-            <label className="grid gap-1 text-[0.66rem] text-muted" htmlFor={`${step.id}-width`}>
-              <span>W</span>
-              <input
-                className="min-w-0 border border-line-subtle bg-surface-raised p-1.5 text-[0.76rem] text-ink"
-                id={`${step.id}-width`}
-                min={1}
-                type="number"
-                value={width}
-                onChange={(event) => onUpdate("width", Number(event.target.value))}
-              />
-            </label>
-            <label className="grid gap-1 text-[0.66rem] text-muted" htmlFor={`${step.id}-height`}>
-              <span>H</span>
-              <input
-                className="min-w-0 border border-line-subtle bg-surface-raised p-1.5 text-[0.76rem] text-ink"
-                id={`${step.id}-height`}
-                min={1}
-                type="number"
-                value={height}
-                onChange={(event) => onUpdate("height", Number(event.target.value))}
-              />
-            </label>
-            <button
-              aria-label={`${aspectRatioLocked ? "Unlock" : "Lock"} aspect ratio`}
-              aria-pressed={aspectRatioLocked}
-              className="mb-px inline-flex size-8 items-center justify-center border border-line-subtle bg-surface-raised text-muted transition-colors hover:border-line-strong hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-              type="button"
-              onClick={() => onUpdate("aspectRatioLocked", !aspectRatioLocked)}
-            >
-              {aspectRatioLocked ? (
-                <Lock size={14} aria-hidden="true" />
-              ) : (
-                <LockOpen size={14} aria-hidden="true" />
-              )}
-            </button>
-          </div>
-        ) : null}
-        {Object.entries(step.parameters).map(([key, value]) =>
-          key === "aspectRatioLocked" ||
-          key === "lockedAspectRatioWidth" ||
-          key === "lockedAspectRatioHeight" ||
-          (step.operationId === "resize" && (key === "width" || key === "height")) ? null : (
-            <label htmlFor={`${step.id}-${key}`} key={key}>
-              <span>{key.replace(/([A-Z])/g, " $1")}</span>
-              {typeof value === "boolean" ? (
+        {operation.options.map((option) => {
+          const value = step.parameters[option.key];
+          const inputId = `${step.id}-${option.key}`;
+
+          if (option.type === "boolean") {
+            return (
+              <label htmlFor={inputId} key={option.key}>
+                <span>{option.label}</span>
                 <input
-                  checked={value}
-                  id={`${step.id}-${key}`}
+                  checked={value === true}
+                  id={inputId}
                   type="checkbox"
-                  onChange={(event) => onUpdate(key, event.target.checked)}
+                  onChange={(event) => onUpdate(option.key, event.target.checked)}
                 />
-              ) : (
-                <input
-                  id={`${step.id}-${key}`}
-                  min={1}
-                  type={typeof value === "number" ? "number" : "text"}
-                  value={value}
-                  onChange={(event) =>
-                    onUpdate(
-                      key,
-                      typeof value === "number" ? Number(event.target.value) : event.target.value,
-                    )
-                  }
-                />
-              )}
+              </label>
+            );
+          }
+
+          if (option.type === "select") {
+            return (
+              <label htmlFor={inputId} key={option.key}>
+                <span>{option.label}</span>
+                <select
+                  id={inputId}
+                  value={typeof value === "string" ? value : ""}
+                  onChange={(event) => onUpdate(option.key, event.target.value)}
+                >
+                  {option.choices.map((choice) => (
+                    <option key={choice.value} value={choice.value}>
+                      {choice.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            );
+          }
+
+          return (
+            <label htmlFor={inputId} key={option.key}>
+              <span>{option.label}</span>
+              <input
+                id={inputId}
+                max={option.type === "number" ? option.max : undefined}
+                min={option.type === "number" ? option.min : undefined}
+                step={option.type === "number" ? option.step : undefined}
+                type={option.type}
+                value={typeof value === "number" || typeof value === "string" ? value : ""}
+                onChange={(event) =>
+                  onUpdate(
+                    option.key,
+                    option.type === "number" ? Number(event.target.value) : event.target.value,
+                  )
+                }
+              />
             </label>
-          ),
-        )}
+          );
+        })}
       </div>
     </article>
   );
