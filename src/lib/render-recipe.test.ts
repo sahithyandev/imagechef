@@ -21,6 +21,13 @@ const resizeStep: RecipeStep = {
   parameters: { aspectRatioLocked: true, width: 400, height: 200, fit: "contain" },
 };
 
+const convertStep: RecipeStep = {
+  id: "convert-1",
+  operationId: "convert",
+  enabled: true,
+  parameters: { format: "image/webp" },
+};
+
 test("does not load an image when there are no enabled supported steps", async () => {
   expect(
     await renderRecipe("image-url", [{ ...resizeStep, enabled: false }], "image/jpeg"),
@@ -56,6 +63,70 @@ test("renders an enabled resize recipe to a data URL", async () => {
     height: 200,
   });
   expect(drawImage).toHaveBeenCalledWith(expect.anything(), 0, 0, 400, 200);
+});
+
+test("renders a convert-only recipe using the requested output format", async () => {
+  const drawImage = mock(() => undefined);
+  const canvas = {
+    width: 0,
+    height: 0,
+    getContext: () => ({ drawImage }),
+    toDataURL: mock((type: string) => `data:${type};base64,rendered`),
+  };
+
+  class DecodedImage {
+    decoding = "";
+    src = "";
+    naturalWidth = 800;
+    naturalHeight = 400;
+    decode = mock(async () => undefined);
+  }
+
+  Object.defineProperty(globalThis, "Image", { configurable: true, value: DecodedImage });
+  Object.defineProperty(globalThis, "document", {
+    configurable: true,
+    value: { createElement: mock(() => canvas) },
+  });
+
+  await expect(renderRecipe("image-url", [convertStep], "image/png")).resolves.toEqual({
+    dataUrl: "data:image/webp;base64,rendered",
+    width: 800,
+    height: 400,
+  });
+  expect(drawImage).toHaveBeenCalledWith(expect.anything(), 0, 0, 800, 400);
+});
+
+test("applies conversion before subsequent resize steps", async () => {
+  const drawImage = mock(() => undefined);
+  const canvases = [
+    { width: 0, height: 0, getContext: () => ({ drawImage }) },
+    {
+      width: 0,
+      height: 0,
+      getContext: () => ({ drawImage }),
+      toDataURL: mock((type: string) => `data:${type};base64,rendered`),
+    },
+  ];
+
+  class DecodedImage {
+    decoding = "";
+    src = "";
+    naturalWidth = 800;
+    naturalHeight = 400;
+    decode = mock(async () => undefined);
+  }
+
+  Object.defineProperty(globalThis, "Image", { configurable: true, value: DecodedImage });
+  Object.defineProperty(globalThis, "document", {
+    configurable: true,
+    value: { createElement: mock(() => canvases.shift()) },
+  });
+
+  await expect(renderRecipe("image-url", [convertStep, resizeStep], "image/png")).resolves.toEqual({
+    dataUrl: "data:image/webp;base64,rendered",
+    width: 400,
+    height: 200,
+  });
 });
 
 test("uses load events when image decoding is unavailable", async () => {

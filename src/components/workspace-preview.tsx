@@ -135,7 +135,7 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
           {output ? <img alt="Recipe output preview" src={output.dataUrl} /> : null}
           {!output ? (
             <div className="preview-scrim">
-              <span>{error ?? "Add an enabled resize step to render a preview"}</span>
+              <span>{error ?? "Add an enabled recipe step to render a preview"}</span>
             </div>
           ) : null}
         </div>
@@ -176,7 +176,7 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
               </div>
             </dl>
           ) : null}
-          {output ? null : <p className="mt-0">Add an enabled resize step to render an output.</p>}
+          {output ? null : <p className="mt-0">Add an enabled recipe step to render an output.</p>}
         </div>
         <button
           className="button button-secondary button-wide"

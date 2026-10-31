@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 
 import type { RecipeStep } from "@/lib/image-recipe";
-import { createRecipe, recipeCatalogue, ResizeRecipe } from "@/lib/recipes";
+import { ConvertFormatRecipe, createRecipe, recipeCatalogue, ResizeRecipe } from "@/lib/recipes";
 
 const resizeStep: RecipeStep = {
   id: "resize-1",
@@ -11,10 +11,21 @@ const resizeStep: RecipeStep = {
 };
 
 test("exposes each available recipe in the catalogue", () => {
-  expect(recipeCatalogue).toEqual([new ResizeRecipe().definition]);
+  expect(recipeCatalogue).toEqual([
+    new ResizeRecipe().definition,
+    new ConvertFormatRecipe().definition,
+  ]);
 });
 
-test("creates a resize recipe and ignores unsupported recipe steps", () => {
+test("creates executable recipes and ignores unsupported recipe steps", () => {
   expect(createRecipe(resizeStep)).toBeInstanceOf(ResizeRecipe);
+  expect(
+    createRecipe({
+      id: "convert-1",
+      operationId: "convert",
+      enabled: true,
+      parameters: { format: "image/webp" },
+    }),
+  ).toBeInstanceOf(ConvertFormatRecipe);
   expect(createRecipe({ ...resizeStep, operationId: "crop" })).toBeNull();
 });

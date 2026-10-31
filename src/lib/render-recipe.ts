@@ -1,6 +1,6 @@
 import type { RecipeStep } from "@/lib/image-recipe";
 import type { RecipeImage } from "@/lib/recipes";
-import { createRecipe, type ResizeRecipe } from "@/lib/recipes";
+import { createRecipe, type ImageRecipe } from "@/lib/recipes";
 
 export type RenderedRecipe = {
   dataUrl: string;
@@ -35,7 +35,7 @@ export const renderRecipe = async (
   const recipes = steps
     .filter((step) => step.enabled)
     .map(createRecipe)
-    .filter((recipe): recipe is ResizeRecipe => recipe !== null);
+    .filter((recipe): recipe is ImageRecipe => recipe !== null);
 
   if (recipes.length === 0) return null;
 

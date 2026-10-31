@@ -7,6 +7,7 @@ import {
   type OperationDefinition,
   type RecipeStep,
 } from "@/lib/image-recipe";
+import { convertFormatParametersSchema } from "@/lib/recipes/convert-format-recipe";
 import { resizeParametersSchema } from "@/lib/recipes/resize-recipe";
 import { WelcomeScreen } from "@/screens/welcome";
 import { Workspace, type WorkspacePanel } from "@/screens/workspace";
@@ -35,7 +36,11 @@ const recipeStepSchema = z.union([
     parameters: resizeParametersSchema,
   }),
   recipeStepBaseSchema.extend({
-    operationId: z.enum(["crop", "rotate", "convert", "quality", "strip-metadata"]),
+    operationId: z.literal("convert"),
+    parameters: convertFormatParametersSchema,
+  }),
+  recipeStepBaseSchema.extend({
+    operationId: z.enum(["crop", "rotate", "quality", "strip-metadata"]),
     parameters: z.record(z.string(), recipeParameterSchema).default({}),
   }),
 ]);
