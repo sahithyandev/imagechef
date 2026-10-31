@@ -1,11 +1,11 @@
+import { z } from "zod";
+import { round } from "@/lib/math";
 import {
   type CanvasFactory,
   Recipe,
   type RecipeDefinition,
   type RecipeImage,
 } from "@/lib/recipes/recipe";
-import { round } from "@/lib/math";
-import { z } from "zod";
 
 export type ResizeLayout = {
   destinationHeight: number;
@@ -28,8 +28,12 @@ export const resizeParametersSchema = z
     aspectRatioLocked: z.boolean().default(resizeParameterDefaults.aspectRatioLocked).catch(true),
     lockedAspectRatioWidth: resizeDimensionSchema.optional(),
     lockedAspectRatioHeight: resizeDimensionSchema.optional(),
-    width: resizeDimensionSchema.default(resizeParameterDefaults.width).catch(resizeParameterDefaults.width),
-    height: resizeDimensionSchema.default(resizeParameterDefaults.height).catch(resizeParameterDefaults.height),
+    width: resizeDimensionSchema
+      .default(resizeParameterDefaults.width)
+      .catch(resizeParameterDefaults.width),
+    height: resizeDimensionSchema
+      .default(resizeParameterDefaults.height)
+      .catch(resizeParameterDefaults.height),
     fit: z.enum(["contain", "cover", "fill"]).default(resizeParameterDefaults.fit).catch("contain"),
   })
   .catch(resizeParameterDefaults);
@@ -37,9 +41,8 @@ export const resizeParametersSchema = z
 export type ResizeParameters = z.output<typeof resizeParametersSchema>;
 export type ResizeFit = ResizeParameters["fit"];
 
-export const normalizeResizeParameters = (
-  parameters: unknown,
-): ResizeParameters => resizeParametersSchema.parse(parameters);
+export const normalizeResizeParameters = (parameters: unknown): ResizeParameters =>
+  resizeParametersSchema.parse(parameters);
 
 export const getResizeDefaultParameters = ({
   height,
@@ -75,7 +78,11 @@ export const resizeWithUpdatedDimension = (
   const nextValue = parsedValue.success ? parsedValue.data : current[dimension];
 
   if (!current.aspectRatioLocked) {
-    const { lockedAspectRatioHeight: _, lockedAspectRatioWidth: __, ...unlockedParameters } = current;
+    const {
+      lockedAspectRatioHeight: _,
+      lockedAspectRatioWidth: __,
+      ...unlockedParameters
+    } = current;
 
     return { ...unlockedParameters, [dimension]: nextValue };
   }
@@ -87,7 +94,10 @@ export const resizeWithUpdatedDimension = (
     return {
       ...current,
       width: nextValue,
-      height: Math.max(1, Math.ceil(nextValue * (lockedAspectRatioHeight / lockedAspectRatioWidth))),
+      height: Math.max(
+        1,
+        Math.ceil(nextValue * (lockedAspectRatioHeight / lockedAspectRatioWidth)),
+      ),
       lockedAspectRatioWidth,
       lockedAspectRatioHeight,
     };
@@ -109,7 +119,11 @@ export const resizeWithUpdatedAspectRatioLock = (
   const current = normalizeResizeParameters(parameters);
 
   if (!aspectRatioLocked) {
-    const { lockedAspectRatioHeight: _, lockedAspectRatioWidth: __, ...unlockedParameters } = current;
+    const {
+      lockedAspectRatioHeight: _,
+      lockedAspectRatioWidth: __,
+      ...unlockedParameters
+    } = current;
 
     return { ...unlockedParameters, aspectRatioLocked: false };
   }
@@ -154,19 +168,19 @@ export class ResizeRecipe extends Recipe<ResizeParameters> {
     category: "Geometry",
     defaults: resizeParameterDefaults,
     options: [
-        { key: "width", label: "Width", type: "number", min: 1, step: 1 },
-        { key: "height", label: "Height", type: "number", min: 1, step: 1 },
-        { key: "aspectRatioLocked", label: "Lock aspect ratio", type: "boolean" },
-        {
-            key: "fit",
-            label: "Fit",
-            type: "select",
-            choices: [
-                { value: "contain", label: "Contain" },
-                { value: "cover", label: "Cover" },
-                { value: "fill", label: "Fill" },
-            ],
-        },
+      { key: "width", label: "Width", type: "number", min: 1, step: 1 },
+      { key: "height", label: "Height", type: "number", min: 1, step: 1 },
+      { key: "aspectRatioLocked", label: "Lock aspect ratio", type: "boolean" },
+      {
+        key: "fit",
+        label: "Fit",
+        type: "select",
+        choices: [
+          { value: "contain", label: "Contain" },
+          { value: "cover", label: "Cover" },
+          { value: "fill", label: "Fill" },
+        ],
+      },
     ] as const satisfies RecipeDefinition["options"],
   };
 

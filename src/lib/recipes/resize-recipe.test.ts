@@ -51,7 +51,12 @@ test("declares the resize editor controls with parameter options", () => {
 
 test("normalizes invalid and missing resize parameters with schema defaults", () => {
   expect(
-    normalizeResizeParameters({ aspectRatioLocked: "yes", width: -10, height: undefined, fit: "stretch" }),
+    normalizeResizeParameters({
+      aspectRatioLocked: "yes",
+      width: -10,
+      height: undefined,
+      fit: "stretch",
+    }),
   ).toEqual({ aspectRatioLocked: true, width: 1600, height: 900, fit: "contain" });
 });
 
@@ -73,7 +78,10 @@ test("rounds up the paired dimension while the aspect ratio is locked", () => {
   );
 
   expect(reduced).toMatchObject({ width: 10, height: 8 });
-  expect(resizeWithUpdatedDimension(reduced, "width", 200)).toMatchObject({ width: 200, height: 150 });
+  expect(resizeWithUpdatedDimension(reduced, "width", 200)).toMatchObject({
+    width: 200,
+    height: 150,
+  });
 });
 
 test("leaves the paired resize dimension unchanged while the aspect ratio is unlocked", () => {

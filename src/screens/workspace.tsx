@@ -82,7 +82,7 @@ export function Workspace({
                   ...step,
                   parameters: resizeWithUpdatedAspectRatioLock(step.parameters, Boolean(value)),
                 }
-            : { ...step, parameters: { ...step.parameters, [key]: value } },
+              : { ...step, parameters: { ...step.parameters, [key]: value } },
       ),
     );
   };
