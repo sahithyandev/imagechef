@@ -1,12 +1,18 @@
 import type { RecipeStep } from "@/lib/image-recipe";
-import { ConvertFormatRecipe } from "@/lib/recipes/convert-format-recipe";
-import { ResizeRecipe } from "@/lib/recipes/resize-recipe";
+import {
+  type ConvertFormatParameters,
+  ConvertFormatRecipe,
+  normalizeConvertFormatParameters,
+} from "@/lib/recipes/convert-format-recipe";
+import {
+  normalizeResizeParameters,
+  type ResizeParameters,
+  ResizeRecipe,
+} from "@/lib/recipes/resize-recipe";
 
 export type {
-  CanvasFactory,
   RecipeCategory,
   RecipeDefinition,
-  RecipeImage,
   RecipeParameter,
   RecipeParameterOption,
 } from "@/lib/recipes/recipe";
@@ -33,15 +39,23 @@ const recipeTypes = [ResizeRecipe, ConvertFormatRecipe];
 
 export const recipeCatalogue = recipeTypes.map((RecipeType) => new RecipeType().definition);
 
-export type ImageRecipe = ResizeRecipe | ConvertFormatRecipe;
+export type ExecutableRecipe =
+  | { operationId: "resize"; parameters: ResizeParameters }
+  | { operationId: "convert"; parameters: ConvertFormatParameters };
 
-export const createRecipe = (step: RecipeStep): ImageRecipe | null => {
+export const createRecipe = (step: RecipeStep): ExecutableRecipe | null => {
   if (step.operationId === "resize") {
-    return new ResizeRecipe(step.parameters);
+    return {
+      operationId: step.operationId,
+      parameters: normalizeResizeParameters(step.parameters),
+    };
   }
 
   if (step.operationId === "convert") {
-    return new ConvertFormatRecipe(step.parameters);
+    return {
+      operationId: step.operationId,
+      parameters: normalizeConvertFormatParameters(step.parameters),
+    };
   }
 
   return null;

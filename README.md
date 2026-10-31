@@ -5,16 +5,25 @@ imagechef is a browser-first workspace for building inspectable image-transforma
 ## Current capabilities
 
 - Stages PNG, JPEG, WebP, and GIF images directly in the browser.
-- Builds an ordered recipe and currently renders enabled **Resize** steps, including aspect-ratio locking and contain, cover, or fill fitting.
+- Builds an ordered recipe and renders enabled **Resize** and **Convert format** steps, including aspect-ratio locking and contain, cover, or fill fitting.
 - Shows input/output dimensions, format, estimated file size, and the size change after rendering.
 - Exports the rendered output with an `-edited` filename suffix.
 - Keeps the current workspace draft in browser `sessionStorage` so it survives a refresh within the same browsing session.
 
-The operation library also lists crop, rotate, conversion, quality, and metadata-removal operations. Those are planned recipe entries; they do not yet transform or export the image.
+The operation library also lists crop, rotate, quality, and metadata-removal operations. Those are planned recipe entries; they do not yet transform or export the image.
 
 ## Privacy and limits
 
-imagechef has no application backend: selected files, preview rendering, and exports remain in the browser. The app stores the staged image as a data URL in `sessionStorage` for the duration of the browser session, so avoid uploading images that should not be present in that browser profile. Very large images can consume substantial browser memory during canvas rendering.
+imagechef has no application backend: selected files, preview rendering, and exports remain in the browser. Rendering happens in a dedicated Worker using wasm-vips/libvips, not a browser canvas. The app stores the staged image as a data URL in `sessionStorage` for the duration of the browser session, so avoid uploading images that should not be present in that browser profile. Very large images can still consume substantial browser memory during processing.
+
+Image processing requires a modern, cross-origin-isolated browser. The deployment must serve the application document and wasm-vips assets with these headers:
+
+```text
+Cross-Origin-Embedder-Policy: require-corp
+Cross-Origin-Opener-Policy: same-origin
+```
+
+Vite applies them during local development. Configure the same headers in the production static host. GIF inputs are processed as their first frame; animated GIF export is not supported.
 
 Static-site hosting, browser extensions, or analytics added by a deployer may have their own data practices; review those separately.
 

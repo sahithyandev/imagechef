@@ -1,6 +1,6 @@
 # imagechef architecture
 
-imagechef is a browser-first React application for building an image-transformation recipe. It stages an image, lets a user compose operations, and currently renders and exports enabled resize steps entirely in the browser.
+imagechef is a browser-first React application for building an image-transformation recipe. It stages an image, lets a user compose operations, and renders enabled resize and format-conversion steps entirely in the browser.
 
 ## Source layout
 
@@ -12,8 +12,8 @@ src/
   components/                shared UI and workspace controls
   lib/                       framework-independent recipe and rendering logic
     image-recipe.ts          operation catalogue, recipe types, and recipe helpers
-    render-recipe.ts         canvas-based rendering for enabled recipes
-    recipes/                 recipe definitions and resize implementation
+    image-processor-*.ts     Worker protocol, client, and wasm-vips processing engine
+    recipes/                 declarative recipe definitions and parameter normalization
   entry-server.tsx           server-side render entry point
   main.tsx                   browser hydration entry point
   screens/                   welcome and workspace screen composition
@@ -34,7 +34,7 @@ App
      ├─ OperationLibrary
      ├─ RecipeEditor
      │   └─ RecipeStepCard
-     └─ WorkspacePreview ── renderRecipe ── ResizeRecipe ── canvas export
+     └─ WorkspacePreview ── ImageProcessorClient ── Worker ── wasm-vips export
 ```
 
 The welcome screen sends an uploaded or built-in `ImageAsset` to `App`. Once an asset is staged, `App` renders the workspace and passes state plus event callbacks down to its components. Workspace components do not persist state themselves.
@@ -48,7 +48,9 @@ The welcome screen sends an uploaded or built-in `ImageAsset` to `App`. Once an 
 - `RecipeStep` represents one configured operation in a recipe.
 - `addRecipeStep`, `moveRecipeStep`, and `getOperation` implement the domain operations used by the UI.
 
-`src/lib/recipes/` holds recipe definitions and implementations. `render-recipe.ts` filters enabled recipe steps to implementations that can currently render, then applies them to canvases. Resize is the only implemented renderer; other catalogue entries remain visible so the recipe model can expand without changing the workspace contract.
+`src/lib/recipes/` holds declarative recipe definitions and parameter normalization. The `ImageProcessorClient` filters enabled recipe steps to supported operations, transfers source bytes to a dedicated Worker, and receives an encoded output blob from wasm-vips. Resize and format conversion are implemented; other catalogue entries remain visible so the recipe model can expand without changing the workspace contract.
+
+The Worker keeps one wasm-vips instance alive and builds a lazy libvips pipeline for each render. It has no DOM or Canvas dependency. Cross-origin isolation (`COOP: same-origin` and `COEP: require-corp`) is required so wasm-vips can use shared memory.
 
 Keeping this code in `lib/` makes it usable from `App`, components, and tests without coupling it to React or a particular screen.
 

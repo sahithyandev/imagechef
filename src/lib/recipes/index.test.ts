@@ -18,7 +18,10 @@ test("exposes each available recipe in the catalogue", () => {
 });
 
 test("creates executable recipes and ignores unsupported recipe steps", () => {
-  expect(createRecipe(resizeStep)).toBeInstanceOf(ResizeRecipe);
+  expect(createRecipe(resizeStep)).toEqual({
+    operationId: "resize",
+    parameters: { aspectRatioLocked: true, width: 640, height: 480, fit: "cover" },
+  });
   expect(
     createRecipe({
       id: "convert-1",
@@ -26,6 +29,6 @@ test("creates executable recipes and ignores unsupported recipe steps", () => {
       enabled: true,
       parameters: { format: "image/webp" },
     }),
-  ).toBeInstanceOf(ConvertFormatRecipe);
+  ).toEqual({ operationId: "convert", parameters: { format: "image/webp" } });
   expect(createRecipe({ ...resizeStep, operationId: "crop" })).toBeNull();
 });

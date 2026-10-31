@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-import {
-  type CanvasFactory,
-  Recipe,
-  type RecipeDefinition,
-  type RecipeImage,
-} from "@/lib/recipes/recipe";
+import { Recipe, type RecipeDefinition } from "@/lib/recipes/recipe";
 
 export const convertFormatParameterDefaults = {
   format: "image/jpeg",
@@ -48,28 +43,5 @@ export class ConvertFormatRecipe extends Recipe<ConvertFormatParameters> {
 
   constructor(parameters: unknown = convertFormatParameterDefaults) {
     super(normalizeConvertFormatParameters(parameters));
-  }
-
-  apply(image: RecipeImage, createCanvas: CanvasFactory): RecipeImage {
-    const canvas = createCanvas(image.width, image.height);
-    const context = canvas.getContext("2d");
-
-    if (!context) {
-      throw new Error("A 2D canvas context is required to convert an image format.");
-    }
-
-    if (this.parameters.format === "image/jpeg") {
-      context.fillStyle = "white";
-      context.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    context.drawImage(image.source, 0, 0, image.width, image.height);
-
-    return {
-      source: canvas,
-      type: this.parameters.format,
-      width: canvas.width,
-      height: canvas.height,
-    };
   }
 }

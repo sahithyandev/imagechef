@@ -1,11 +1,15 @@
 import { ArrowDown, ArrowUp, FileImage, ImageUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { PanelHeading } from "@/components/panel-heading";
 import { cn } from "@/lib/cn";
+import {
+  ImageProcessorClient,
+  isImageProcessorSupported,
+  type RenderedImage,
+} from "@/lib/image-processor-client";
 import type { ImageAsset, RecipeStep } from "@/lib/image-recipe";
 import { getResizeCompressionRatioPercentage } from "@/lib/recipes";
-import { type RenderedRecipe, renderRecipe } from "@/lib/render-recipe";
 
 const formatFileSize = (bytes: number) => {
   if (bytes <= 0) return "N/A";
@@ -25,18 +29,6 @@ const formatImageType = (type: string | undefined) => {
   return format === "JPG" ? "JPEG" : format || "Unknown";
 };
 
-const getDataUrlMetadata = (dataUrl: string): { size: number; type: string } => {
-  const match = dataUrl.match(/^data:([^;,]+);base64,(.*)$/);
-
-  if (!match) return { size: 0, type: "" };
-
-  const type = match[1] ?? "";
-  const encodedData = match[2] ?? "";
-  const padding = encodedData.endsWith("==") ? 2 : encodedData.endsWith("=") ? 1 : 0;
-
-  return { size: (encodedData.length * 3) / 4 - padding, type };
-};
-
 const getExportFileName = (name: string, type: string) => {
   const extension = type.replace("image/", "").replace("jpeg", "jpg") || "png";
   const baseName = name.replace(/\.[^.]+$/, "") || "image";
@@ -45,14 +37,18 @@ const getExportFileName = (name: string, type: string) => {
 };
 
 export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe: RecipeStep[] }) {
-  const [output, setOutput] = useState<RenderedRecipe | null>(null);
+  const [output, setOutput] = useState<(RenderedImage & { previewUrl: string }) | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [processorAvailable, setProcessorAvailable] = useState<boolean | null>(null);
+  const [isRendering, setIsRendering] = useState(false);
+  const processorRef = useRef<ImageProcessorClient | null>(null);
+  const previewUrlRef = useRef<string | null>(null);
   const [dimensions, setDimensions] = useState<{
     height: number;
     previewUrl: string;
     width: number;
   } | null>(null);
-  const outputMetadata = output ? getDataUrlMetadata(output.dataUrl) : null;
+  const outputMetadata = output ? { size: output.size, type: output.type } : null;
   const compressionRatioPercentage = outputMetadata
     ? getResizeCompressionRatioPercentage(asset.size, outputMetadata.size)
     : undefined;
@@ -60,30 +56,98 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
   const exportOutput = () => {
     if (!output || !outputMetadata) return;
 
+    const downloadUrl = URL.createObjectURL(output.blob);
     const download = document.createElement("a");
-    download.href = output.dataUrl;
+    download.href = downloadUrl;
     download.download = getExportFileName(asset.name, outputMetadata.type);
     download.click();
+    URL.revokeObjectURL(downloadUrl);
   };
 
   useEffect(() => {
+    if (!isImageProcessorSupported()) {
+      console.error("[imagechef] image processor is unavailable in this browser");
+      setProcessorAvailable(false);
+      return;
+    }
+
+    console.info("[imagechef] mounting workspace image processor");
+    const processor = new ImageProcessorClient();
+    processorRef.current = processor;
+    setProcessorAvailable(true);
+
+    return () => {
+      console.info("[imagechef] unmounting workspace image processor");
+      processor.terminate();
+      processorRef.current = null;
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
     let isCurrent = true;
+    const processor = processorRef.current;
+    console.info("[imagechef] preview render state changed", {
+      asset: asset.name,
+      hasProcessor: Boolean(processor),
+      processorAvailable,
+      recipe: recipe.map((step) => ({ enabled: step.enabled, operationId: step.operationId })),
+    });
 
     setOutput(null);
     setError(null);
+    setIsRendering(false);
 
-    void renderRecipe(asset.previewUrl, recipe, asset.type)
-      .then((result) => {
-        if (isCurrent) setOutput(result);
-      })
-      .catch(() => {
-        if (isCurrent) setError("The output preview could not be rendered.");
-      });
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+      previewUrlRef.current = null;
+    }
+
+    if (processorAvailable === false) {
+      console.error("[imagechef] preview render blocked because processor is unavailable");
+      setError("Image processing requires a cross-origin-isolated browser.");
+      return;
+    }
+
+    if (!processor) {
+      console.info("[imagechef] preview render deferred while worker initializes");
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      console.info("[imagechef] starting debounced preview render");
+      setIsRendering(true);
+      void processor
+        .render(asset.previewUrl, asset.type, recipe)
+        .then((result) => {
+          if (!isCurrent || !result) {
+            console.info("[imagechef] discarding stale or empty preview render result");
+            return;
+          }
+          const previewUrl = URL.createObjectURL(result.blob);
+          console.info("[imagechef] preview render completed", {
+            height: result.height,
+            size: result.size,
+            type: result.type,
+            width: result.width,
+          });
+          previewUrlRef.current = previewUrl;
+          setOutput({ ...result, previewUrl });
+        })
+        .catch((renderError) => {
+          console.error("[imagechef] preview render failed", renderError);
+          if (isCurrent) setError("The output preview could not be rendered.");
+        })
+        .finally(() => {
+          if (isCurrent) setIsRendering(false);
+        });
+    }, 250);
 
     return () => {
       isCurrent = false;
+      window.clearTimeout(timer);
     };
-  }, [asset.previewUrl, asset.type, recipe]);
+  }, [asset.previewUrl, asset.type, processorAvailable, recipe]);
 
   return (
     <section className="workspace-panel preview-panel" aria-label="Input and output previews">
@@ -132,10 +196,15 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
       <section className="preview-section output-section" aria-labelledby="output-title">
         <PanelHeading icon={<ImageUp size={17} />} title="Output" id="output-title" />
         <div className="output-preview">
-          {output ? <img alt="Recipe output preview" src={output.dataUrl} /> : null}
+          {output ? <img alt="Recipe output preview" src={output.previewUrl} /> : null}
           {!output ? (
             <div className="preview-scrim">
-              <span>{error ?? "Add an enabled recipe step to render a preview"}</span>
+              <span>
+                {error ??
+                  (isRendering
+                    ? "Rendering preview…"
+                    : "Add an enabled recipe step to render a preview")}
+              </span>
             </div>
           ) : null}
         </div>

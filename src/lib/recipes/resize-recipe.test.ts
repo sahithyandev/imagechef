@@ -1,4 +1,4 @@
-import { expect, mock, test } from "bun:test";
+import { expect, test } from "bun:test";
 
 import {
   getResizeCompressionRatioPercentage,
@@ -147,38 +147,7 @@ test("calculates cover and fill layouts", () => {
   });
 });
 
-test("draws a resized image onto a destination canvas", () => {
-  const drawImage = mock((..._args: unknown[]) => undefined);
-  const canvas = {
-    width: 0,
-    height: 0,
-    getContext: () => ({ drawImage }),
-  } as unknown as HTMLCanvasElement;
-  const recipe = new ResizeRecipe({ width: 400, height: 400, fit: "contain" });
-
-  const output = recipe.apply(
-    { source: {} as CanvasImageSource, type: "image/jpeg", width: 800, height: 400 },
-    (width, height) => {
-      canvas.width = width;
-      canvas.height = height;
-      return canvas;
-    },
-  );
-
-  expect(drawImage).toHaveBeenCalledWith(expect.anything(), 0, 100, 400, 200);
-  expect(output).toEqual({ source: canvas, type: "image/jpeg", width: 400, height: 400 });
-});
-
-test("requires a 2D context when applying a resize", () => {
-  expect(() =>
-    new ResizeRecipe().apply(
-      { source: {} as CanvasImageSource, type: "image/jpeg", width: 1, height: 1 },
-      () => ({ getContext: () => null }) as unknown as HTMLCanvasElement,
-    ),
-  ).toThrow("A 2D canvas context is required to resize an image.");
-});
-
-test("resize recipe is a Recipe implementation and preserves aspect ratio with contain", () => {
+test("resize recipe is declarative and preserves aspect ratio with contain", () => {
   const recipe = new ResizeRecipe({ width: 400, height: 400, fit: "contain" });
   const layout = getResizeLayout(800, 400, {
     aspectRatioLocked: false,

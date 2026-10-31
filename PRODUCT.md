@@ -29,19 +29,19 @@ single transformation workspace.
 ## Capabilities and Constraints
 
 The current implementation stages common raster image files and edits recipes locally.
-Enabled resize steps render in a browser canvas and can be exported. Crop, rotate,
-conversion, quality, and metadata-removal entries are modelled but not rendered yet.
-The workspace draft is session-scoped browser storage; there are no workers,
-shareable recipes, accounts, or server-side processing.
+Enabled resize and conversion steps render in a dedicated browser Worker with wasm-vips
+and can be exported. Crop, rotate, quality, and metadata-removal entries are modelled
+but not rendered yet. The workspace draft is session-scoped browser storage; there are
+no shareable recipes, accounts, or server-side processing.
 
 ## Evidence on Hand
 
 `ARCHITECTURE.md` documents the browser-first pipeline model. Bundled sample images
-and a canvas-based resize renderer are present.
+and a wasm-vips Worker renderer are present.
 
 ## Product Principles
 
 - Make every intended transformation visible and reorderable.
 - Keep the input, recipe, and output relationship legible at a glance.
 - Prefer explicit status over implying processing has occurred.
-- Establish contracts that can later move execution into browser workers.
+- Keep recipes declarative so future operations, including convolution kernels, can run in the processing Worker.

@@ -1,12 +1,7 @@
 import { z } from "zod";
 
 import { round } from "@/lib/math";
-import {
-  type CanvasFactory,
-  Recipe,
-  type RecipeDefinition,
-  type RecipeImage,
-} from "@/lib/recipes/recipe";
+import { Recipe, type RecipeDefinition } from "@/lib/recipes/recipe";
 
 export type ResizeLayout = {
   destinationHeight: number;
@@ -48,7 +43,10 @@ export const normalizeResizeParameters = (parameters: unknown): ResizeParameters
 export const getResizeDefaultParameters = ({
   height,
   width,
-}: Pick<RecipeImage, "height" | "width">): ResizeParameters => ({
+}: {
+  height: number;
+  width: number;
+}): ResizeParameters => ({
   aspectRatioLocked: true,
   width: resizeDimensionSchema.catch(resizeParameterDefaults.width).parse(width),
   height: resizeDimensionSchema.catch(resizeParameterDefaults.height).parse(height),
@@ -187,25 +185,5 @@ export class ResizeRecipe extends Recipe<ResizeParameters> {
 
   constructor(parameters: unknown = resizeParameterDefaults) {
     super(normalizeResizeParameters(parameters));
-  }
-
-  apply(image: RecipeImage, createCanvas: CanvasFactory): RecipeImage {
-    const canvas = createCanvas(this.parameters.width, this.parameters.height);
-    const context = canvas.getContext("2d");
-
-    if (!context) {
-      throw new Error("A 2D canvas context is required to resize an image.");
-    }
-
-    const layout = getResizeLayout(image.width, image.height, this.parameters);
-    context.drawImage(
-      image.source,
-      layout.destinationX,
-      layout.destinationY,
-      layout.destinationWidth,
-      layout.destinationHeight,
-    );
-
-    return { source: canvas, type: image.type, width: canvas.width, height: canvas.height };
   }
 }
