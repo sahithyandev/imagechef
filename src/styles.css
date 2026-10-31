@@ -94,7 +94,7 @@
     @apply size-2.5;
   }
   ::-webkit-scrollbar-thumb {
-    @apply border-surface bg-line-subtle rounded-[10px] border-[3px];
+    @apply border-surface bg-line-subtle rounded-[10px] border-3;
   }
 }
 
@@ -114,7 +114,7 @@
     @apply border-b-transparent;
   }
   .brand {
-    @apply text-ink text-[1.15rem] font-bold tracking-[-0.05em] no-underline;
+    @apply text-ink text-[1.15rem] font-bold tracking-tighter no-underline;
   }
   .brand span {
     @apply text-accent font-medium;
@@ -123,13 +123,13 @@
     @apply text-muted flex items-center gap-2 text-[0.78rem];
   }
   .status-dot {
-    @apply bg-accent size-[7px] rounded-full;
+    @apply bg-accent size-1.75 rounded-full;
   }
   .welcome-content {
-    @apply mx-auto grid min-h-[calc(100dvh-64px)] max-w-[1280px] content-center gap-[52px] px-7 pt-[clamp(36px,7vh,84px)] pb-15;
+    @apply mx-auto grid min-h-[calc(100dvh-64px)] max-w-7xl content-center gap-13 px-7 pt-[clamp(36px,7vh,84px)] pb-15;
   }
   .welcome-copy {
-    @apply max-w-[980px];
+    @apply max-w-245;
   }
   .welcome-copy h1 {
     @apply m-0 max-w-[20ch] text-[clamp(2.8rem,7vw,5.7rem)] leading-[0.91] tracking-[-0.065em] text-balance;
@@ -142,7 +142,7 @@
     @apply grid gap-6;
   }
   .dropzone {
-    @apply border-dropzone-line bg-surface flex min-h-[270px] flex-col items-center justify-center gap-3 border border-dashed p-[34px] text-center transition-[border-color,background] duration-200 ease-in-out;
+    @apply border-dropzone-line bg-surface flex min-h-67.5 flex-col items-center justify-center gap-3 border border-dashed p-8.5 text-center transition-[border-color,background] duration-200 ease-in-out;
   }
   .dropzone:hover {
     @apply border-accent bg-surface-hover;
@@ -174,11 +174,11 @@
   }
 
   .sample-image-grid {
-    @apply grid max-w-[660px] grid-cols-3 gap-3;
+    @apply grid max-w-165 grid-cols-3 gap-3;
   }
 
   .button {
-    @apply inline-flex min-h-[37px] items-center justify-center border border-transparent px-3.5 text-[0.84rem] font-[650] transition-[background,color] duration-150 ease-in-out;
+    @apply inline-flex min-h-9.25 items-center justify-center border border-transparent px-3.5 text-[0.84rem] font-[650] transition-[background,color] duration-150 ease-in-out;
   }
   .button-primary {
     @apply bg-accent text-canvas mt-1.5;
@@ -193,7 +193,7 @@
     @apply cursor-not-allowed opacity-[0.43];
   }
   .inline-error {
-    @apply bg-error-surface text-error -mt-[30px] px-3.5 py-3;
+    @apply bg-error-surface text-error -mt-7.5 px-3.5 py-3;
   }
   .topbar-actions {
     @apply flex items-center gap-5;
@@ -205,7 +205,7 @@
     @apply min-w-0 overflow-y-auto p-6;
   }
   .panel-heading {
-    @apply text-ink mt-0 mb-[22px] flex items-center gap-[9px] text-[0.86rem] tracking-[-0.01em];
+    @apply text-ink mt-0 mb-5.5 flex items-center gap-2.25 text-[0.86rem] tracking-[-0.01em];
   }
   .panel-heading svg {
     @apply text-accent;
@@ -219,7 +219,7 @@
   }
   .image-stage img,
   .output-preview img {
-    @apply block h-auto max-h-[420px] max-w-full;
+    @apply block h-auto max-h-105 max-w-full;
   }
   .file-details {
     @apply grid py-4;
@@ -232,7 +232,7 @@
     @apply text-muted text-[0.78rem] leading-[1.45];
   }
   .search-field {
-    @apply border-line-strong text-muted flex items-center gap-[9px] border-b pb-[9px];
+    @apply border-line-strong text-muted flex items-center gap-2.25 border-b pb-2.25;
   }
   .search-field input {
     @apply text-ink w-full min-w-0 border-0 bg-transparent outline-0;
@@ -259,7 +259,7 @@
     @apply transition-transform duration-150 ease-out;
   }
   .operation-option {
-    @apply border-line-subtle text-ink flex min-h-[62px] w-full items-center justify-between gap-2.5 border-0 border-t bg-transparent px-1 py-2.5 text-left;
+    @apply border-line-subtle text-ink flex min-h-15 w-full items-center justify-between gap-2.5 border-0 border-t bg-transparent px-1 py-2.5 text-left;
   }
   .operation-option:hover {
     @apply bg-surface-hover;
@@ -272,7 +272,7 @@
     @apply text-[0.8rem];
   }
   .operation-option small {
-    @apply text-muted mt-[3px] pr-2 text-[0.69rem] leading-[1.35];
+    @apply text-muted mt-0.75 pr-2 text-[0.69rem] leading-[1.35];
   }
   .operation-option svg {
     @apply text-accent shrink-0;
@@ -287,22 +287,22 @@
     @apply text-muted flex justify-between text-[0.7rem] font-bold tracking-[0.08em] uppercase;
   }
   .empty-recipe {
-    @apply text-muted mt-3.5 mb-0 text-[0.83rem] leading-[1.5];
+    @apply text-muted mt-3.5 mb-0 text-[0.83rem] leading-normal;
   }
   .recipe-step {
-    @apply border-line border-b py-[15px];
+    @apply border-line border-b py-3.75;
   }
   .recipe-step.is-disabled {
     @apply opacity-50;
   }
   .step-topline {
-    @apply flex items-center gap-[9px];
+    @apply flex items-center gap-2.25;
   }
   .step-topline strong {
     @apply text-[0.84rem];
   }
   .toggle-button {
-    @apply bg-accent text-canvas min-w-[26px] border-0 px-1 py-[3px] text-[0.62rem] font-extrabold;
+    @apply bg-accent text-canvas min-w-6.5 border-0 px-1 py-0.75 text-[0.62rem] font-extrabold;
   }
   .is-disabled .toggle-button {
     @apply bg-line-strong text-ink;
@@ -320,10 +320,10 @@
     @apply opacity-25;
   }
   .recipe-step p {
-    @apply mt-2 mr-0 mb-3 ml-[35px];
+    @apply mt-2 mr-0 mb-3 ml-8.75;
   }
   .parameter-grid {
-    @apply ml-[35px] grid grid-cols-2 gap-2;
+    @apply ml-8.75 grid grid-cols-2 gap-2;
   }
   .parameter-grid label {
     @apply text-muted grid gap-1 text-[0.66rem] capitalize;
@@ -359,7 +359,7 @@
     @apply text-[0.9rem];
   }
   .output-copy p {
-    @apply mt-[7px] mb-0;
+    @apply mt-1.75 mb-0;
   }
   .button-wide {
     @apply mt-auto w-full;
@@ -370,14 +370,14 @@
 
   @media (max-width: 850px) {
     .topbar {
-      @apply px-[18px];
+      @apply px-4.5;
     }
 
     .mobile-tabs {
       @apply border-line grid grid-cols-3 border-b;
     }
     .mobile-tabs button {
-      @apply text-muted border-0 border-b-2 border-b-transparent bg-transparent px-2.5 pt-3.5 pb-[11px] capitalize;
+      @apply text-muted border-0 border-b-2 border-b-transparent bg-transparent px-2.5 pt-3.5 pb-2.75 capitalize;
     }
     .mobile-tabs button.active {
       @apply border-b-accent text-ink;
@@ -386,7 +386,7 @@
       @apply block h-auto min-h-[calc(100dvh-109px)] overflow-visible;
     }
     .workspace-panel {
-      @apply hidden overflow-visible border-0 px-[18px] py-5;
+      @apply hidden overflow-visible border-0 px-4.5 py-5;
     }
     .preview-panel {
       @apply gap-3;
@@ -418,7 +418,7 @@
       @apply hidden;
     }
     .welcome-content {
-      @apply gap-[38px] px-5;
+      @apply gap-9.5 px-5;
     }
 
     .sample-images-heading {
