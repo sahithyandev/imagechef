@@ -1,10 +1,10 @@
 import { ArrowDown, ArrowUp, FileImage, ImageUp } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PanelHeading } from "@/components/panel-heading";
 import { cn } from "@/lib/cn";
 import type { ImageAsset, RecipeStep } from "@/lib/image-recipe";
-import { round } from "@/lib/math";
+import { getResizeCompressionRatioPercentage } from "@/lib/recipes";
 import { type RenderedRecipe, renderRecipe } from "@/lib/render-recipe";
 
 const formatFileSize = (bytes: number) => {
@@ -13,7 +13,10 @@ const formatFileSize = (bytes: number) => {
   const units = ["B", "KB", "MB", "GB"];
   const unitIndex = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
   const value = bytes / 1024 ** unitIndex;
-  return `${new Intl.NumberFormat(undefined, { maximumFractionDigits: value < 10 ? 1 : 0 }).format(value)} ${units[unitIndex]}`;
+  return `${new Intl.NumberFormat(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)} ${units[unitIndex]}`;
 };
 
 const formatImageType = (type: string | undefined) => {
@@ -43,10 +46,9 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
     width: number;
   } | null>(null);
   const outputMetadata = output ? getDataUrlMetadata(output.dataUrl) : null;
-  const compressionRatioPercentage = useMemo(() => {
-    if (!outputMetadata?.size) return undefined;
-    return round((1 - outputMetadata.size / asset.size) * 100, 2);
-  }, [asset, outputMetadata]);
+  const compressionRatioPercentage = outputMetadata
+    ? getResizeCompressionRatioPercentage(asset.size, outputMetadata.size)
+    : undefined;
 
   useEffect(() => {
     let isCurrent = true;
@@ -136,22 +138,22 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
                 <dt className="text-muted">File size</dt>
                 <dd className="text-ink">
                   {formatFileSize(outputMetadata.size)}{" "}
-                  {compressionRatioPercentage ? (
+                  {compressionRatioPercentage !== undefined ? (
                     <>
                       (
                       <span
                         className={cn(
-                          compressionRatioPercentage < 100
+                          compressionRatioPercentage >= 0
                             ? "text-improvement"
                             : "text-regression",
                         )}
                       >
-                        {compressionRatioPercentage < 100 ? (
+                        {compressionRatioPercentage >= 0 ? (
                           <ArrowDown className="inline-block size-4 pr-0.5" />
                         ) : (
                           <ArrowUp className="inline-block size-4 pr-0.5" />
                         )}
-                        <span>{compressionRatioPercentage}%</span>
+                        <span>{Math.abs(compressionRatioPercentage)}%</span>
                       </span>
                       )
                     </>
