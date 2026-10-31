@@ -28,14 +28,16 @@ single transformation workspace.
 
 ## Capabilities and Constraints
 
-The current implementation is a UI scaffold: it stages common raster image files and
-models recipe editing locally. Image processing, workers, exports, persistence, and
-shareable recipes are deliberately not connected yet.
+The current implementation stages common raster image files and edits recipes locally.
+Enabled resize steps render in a browser canvas and can be exported. Crop, rotate,
+conversion, quality, and metadata-removal entries are modelled but not rendered yet.
+The workspace draft is session-scoped browser storage; there are no workers,
+shareable recipes, accounts, or server-side processing.
 
 ## Evidence on Hand
 
-`ARCHITECTURE.md` documents the intended browser-first pipeline model. No production
-image assets or processing engine are currently present.
+`ARCHITECTURE.md` documents the browser-first pipeline model. Bundled sample images
+and a canvas-based resize renderer are present.
 
 ## Product Principles
 

@@ -1,6 +1,22 @@
 # imagechef
 
-A browser-first image transformation workspace. Users can upload an image or start with one of the built-in test photographs.
+imagechef is a browser-first workspace for building inspectable image-transformation recipes. Upload an image or choose a bundled sample, add a resize step, preview the result, and download the rendered output.
+
+## Current capabilities
+
+- Stages PNG, JPEG, WebP, and GIF images directly in the browser.
+- Builds an ordered recipe and currently renders enabled **Resize** steps, including aspect-ratio locking and contain, cover, or fill fitting.
+- Shows input/output dimensions, format, estimated file size, and the size change after rendering.
+- Exports the rendered output with an `-edited` filename suffix.
+- Keeps the current workspace draft in browser `sessionStorage` so it survives a refresh within the same browsing session.
+
+The operation library also lists crop, rotate, conversion, quality, and metadata-removal operations. Those are planned recipe entries; they do not yet transform or export the image.
+
+## Privacy and limits
+
+imagechef has no application backend: selected files, preview rendering, and exports remain in the browser. The app stores the staged image as a data URL in `sessionStorage` for the duration of the browser session, so avoid uploading images that should not be present in that browser profile. Very large images can consume substantial browser memory during canvas rendering.
+
+Static-site hosting, browser extensions, or analytics added by a deployer may have their own data practices; review those separately.
 
 ## Stack
 
@@ -20,18 +36,22 @@ bun run build
 bun run test
 bun run lint
 bun run typecheck
-bun run check
+bun run verify
 ```
+
+`bun run verify` is the release verification command. It formats/lints, type-checks, runs tests, and creates a production build.
 
 ## Deployment
 
-`bun run build` prerenders the initial workspace into `dist/index.html` and then ships the
-JavaScript bundle for React hydration. Vercel can deploy the project as a Vite static site with
-the default build command and `dist` as its output directory; no serverless function is needed.
+`bun run build` prerenders the initial workspace into `dist/index.html` and ships the JavaScript bundle for React hydration. Deploy it as a Vite static site with `bun run build` and `dist` as the output directory; no serverless function is needed.
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the project's code conventions and verification requirements.
+
+## Security
+
+Please report potential vulnerabilities privately as described in [SECURITY.md](SECURITY.md). Do not open a public issue for a suspected security problem.
 
 ## Sample-image credits
 
