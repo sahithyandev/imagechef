@@ -37,6 +37,13 @@ const getDataUrlMetadata = (dataUrl: string): { size: number; type: string } => 
   return { size: (encodedData.length * 3) / 4 - padding, type };
 };
 
+const getExportFileName = (name: string, type: string) => {
+  const extension = type.replace("image/", "").replace("jpeg", "jpg") || "png";
+  const baseName = name.replace(/\.[^.]+$/, "") || "image";
+
+  return `${baseName}-edited.${extension}`;
+};
+
 export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe: RecipeStep[] }) {
   const [output, setOutput] = useState<RenderedRecipe | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -49,6 +56,15 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
   const compressionRatioPercentage = outputMetadata
     ? getResizeCompressionRatioPercentage(asset.size, outputMetadata.size)
     : undefined;
+
+  const exportOutput = () => {
+    if (!output || !outputMetadata) return;
+
+    const download = document.createElement("a");
+    download.href = output.dataUrl;
+    download.download = getExportFileName(asset.name, outputMetadata.type);
+    download.click();
+  };
 
   useEffect(() => {
     let isCurrent = true;
@@ -164,7 +180,12 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
           ) : null}
           {output ? null : <p className="mt-0">Add an enabled resize step to render an output.</p>}
         </div>
-        <button className="button button-secondary button-wide" disabled type="button">
+        <button
+          className="button button-secondary button-wide"
+          disabled={!output || !outputMetadata}
+          onClick={exportOutput}
+          type="button"
+        >
           Export output
         </button>
       </section>
