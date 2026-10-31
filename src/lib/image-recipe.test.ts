@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { addRecipeStep, moveRecipeStep } from "@/lib/image-recipe";
+import { addRecipeStep, getOperation, moveRecipeStep } from "@/lib/image-recipe";
 
 test("adds editable operation defaults to a recipe", () => {
   const recipe = addRecipeStep([], "resize");
@@ -32,4 +32,17 @@ test("moves an operation without mutating the existing recipe", () => {
 
   expect(moved[0]?.id).toBe(recipe[1]?.id);
   expect(recipe[0]?.id).not.toBe(recipe[1]?.id);
+});
+
+test("keeps the existing recipe when a move has an invalid destination or source", () => {
+  const recipe = addRecipeStep([], "resize");
+
+  expect(moveRecipeStep(recipe, 0, -1)).toBe(recipe);
+  expect(moveRecipeStep(recipe, 0, 1)).toBe(recipe);
+  expect(moveRecipeStep(recipe, 0, 0)).toBe(recipe);
+  expect(moveRecipeStep(recipe, 1, 0)).toBe(recipe);
+});
+
+test("rejects an unknown operation", () => {
+  expect(() => getOperation("unknown" as never)).toThrow("Unknown operation: unknown");
 });
