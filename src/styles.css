@@ -21,6 +21,8 @@
   --color-line-subtle: #4b5049;
   --color-error-surface: #44291f;
   --color-error: #ffb7a0;
+  --color-improvement: #8ee6a2;
+  --color-regression: #ffaaa0;
 }
 
 :root {
@@ -49,6 +51,8 @@
     --color-line-subtle: #dfe4dc;
     --color-error-surface: #ffe5da;
     --color-error: #8a351e;
+    --color-improvement: #157a3d;
+    --color-regression: #b42318;
   }
 }
 

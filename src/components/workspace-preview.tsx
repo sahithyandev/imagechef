@@ -141,7 +141,9 @@ export function WorkspacePreview({ asset, recipe }: { asset: ImageAsset; recipe:
                       (
                       <span
                         className={cn(
-                          compressionRatioPercentage < 100 ? "text-green-400" : "text-red-500",
+                          compressionRatioPercentage < 100
+                            ? "text-improvement"
+                            : "text-regression",
                         )}
                       >
                         {compressionRatioPercentage < 100 ? (
