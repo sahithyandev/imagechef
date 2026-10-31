@@ -33,6 +33,17 @@ test("updates the paired resize dimension while the aspect ratio is locked", () 
   ).toMatchObject({ width: 800, height: 450 });
 });
 
+test("rounds up the paired dimension while the aspect ratio is locked", () => {
+  const reduced = resizeWithUpdatedDimension(
+    { aspectRatioLocked: true, width: 400, height: 300, fit: "contain" },
+    "width",
+    10,
+  );
+
+  expect(reduced).toMatchObject({ width: 10, height: 8 });
+  expect(resizeWithUpdatedDimension(reduced, "width", 200)).toMatchObject({ width: 200, height: 150 });
+});
+
 test("leaves the paired resize dimension unchanged while the aspect ratio is unlocked", () => {
   expect(
     resizeWithUpdatedDimension(

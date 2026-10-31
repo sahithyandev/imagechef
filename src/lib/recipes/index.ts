@@ -15,6 +15,7 @@ export {
   getResizeLayout,
   normalizeResizeParameters,
   ResizeRecipe,
+  resizeWithUpdatedAspectRatioLock,
   resizeWithUpdatedDimension,
 } from "@/lib/recipes/resize-recipe";
 

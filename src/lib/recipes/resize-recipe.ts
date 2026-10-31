@@ -20,11 +20,13 @@ export const resizeParameterDefaults = {
   fit: "contain",
 } as const;
 
-const resizeDimensionSchema = z.number().finite().positive().transform(Math.round);
+const resizeDimensionSchema = z.number().positive().transform(Math.round);
 
 export const resizeParametersSchema = z
   .object({
     aspectRatioLocked: z.boolean().default(resizeParameterDefaults.aspectRatioLocked).catch(true),
+    lockedAspectRatioWidth: resizeDimensionSchema.optional(),
+    lockedAspectRatioHeight: resizeDimensionSchema.optional(),
     width: resizeDimensionSchema.default(resizeParameterDefaults.width).catch(resizeParameterDefaults.width),
     height: resizeDimensionSchema.default(resizeParameterDefaults.height).catch(resizeParameterDefaults.height),
     fit: z.enum(["contain", "cover", "fill"]).default(resizeParameterDefaults.fit).catch("contain"),
@@ -58,21 +60,50 @@ export const resizeWithUpdatedDimension = (
   const nextValue = parsedValue.success ? parsedValue.data : current[dimension];
 
   if (!current.aspectRatioLocked) {
-    return { ...current, [dimension]: nextValue };
+    const { lockedAspectRatioHeight: _, lockedAspectRatioWidth: __, ...unlockedParameters } = current;
+
+    return { ...unlockedParameters, [dimension]: nextValue };
   }
+
+  const lockedAspectRatioWidth = current.lockedAspectRatioWidth ?? current.width;
+  const lockedAspectRatioHeight = current.lockedAspectRatioHeight ?? current.height;
 
   if (dimension === "width") {
     return {
       ...current,
       width: nextValue,
-      height: Math.max(1, Math.round(nextValue * (current.height / current.width))),
+      height: Math.max(1, Math.ceil(nextValue * (lockedAspectRatioHeight / lockedAspectRatioWidth))),
+      lockedAspectRatioWidth,
+      lockedAspectRatioHeight,
     };
   }
 
   return {
     ...current,
     height: nextValue,
-    width: Math.max(1, Math.round(nextValue * (current.width / current.height))),
+    width: Math.max(1, Math.ceil(nextValue * (lockedAspectRatioWidth / lockedAspectRatioHeight))),
+    lockedAspectRatioWidth,
+    lockedAspectRatioHeight,
+  };
+};
+
+export const resizeWithUpdatedAspectRatioLock = (
+  parameters: unknown,
+  aspectRatioLocked: boolean,
+): ResizeParameters => {
+  const current = normalizeResizeParameters(parameters);
+
+  if (!aspectRatioLocked) {
+    const { lockedAspectRatioHeight: _, lockedAspectRatioWidth: __, ...unlockedParameters } = current;
+
+    return { ...unlockedParameters, aspectRatioLocked: false };
+  }
+
+  return {
+    ...current,
+    aspectRatioLocked: true,
+    lockedAspectRatioWidth: current.width,
+    lockedAspectRatioHeight: current.height,
   };
 };
 

@@ -98,6 +98,8 @@ export function RecipeStepCard({
         ) : null}
         {Object.entries(step.parameters).map(([key, value]) =>
           key === "aspectRatioLocked" ||
+          key === "lockedAspectRatioWidth" ||
+          key === "lockedAspectRatioHeight" ||
           (step.operationId === "resize" && (key === "width" || key === "height")) ? null : (
             <label htmlFor={`${step.id}-${key}`} key={key}>
               <span>{key.replace(/([A-Z])/g, " $1")}</span>

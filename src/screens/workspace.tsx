@@ -12,7 +12,7 @@ import {
   operationCatalogue,
   type RecipeStep,
 } from "@/lib/image-recipe";
-import { resizeWithUpdatedDimension } from "@/lib/recipes";
+import { resizeWithUpdatedAspectRatioLock, resizeWithUpdatedDimension } from "@/lib/recipes";
 
 export type WorkspacePanel = "library" | "recipe" | "preview";
 
@@ -77,6 +77,11 @@ export function Workspace({
                 ...step,
                 parameters: resizeWithUpdatedDimension(step.parameters, key, Number(value)),
               }
+            : step.operationId === "resize" && key === "aspectRatioLocked"
+              ? {
+                  ...step,
+                  parameters: resizeWithUpdatedAspectRatioLock(step.parameters, Boolean(value)),
+                }
             : { ...step, parameters: { ...step.parameters, [key]: value } },
       ),
     );
